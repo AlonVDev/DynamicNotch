@@ -4,7 +4,7 @@ struct ExternalDriveNotificationView: View {
     let drive: ExternalDriveModel
     let onEject: (@MainActor () -> Void)?
 
-    @Environment(\.isDynamicIsland) private var isDynamicIsland
+    @Environment(\.isNotchlessScreen) private var isNotchlessScreen
     @State private var isEjectHovered = false
 
     var body: some View {
@@ -12,9 +12,9 @@ struct ExternalDriveNotificationView: View {
             Spacer()
             content
         }
-        .padding(.leading, isDynamicIsland ? 19 : 40)
-        .padding(.trailing, isDynamicIsland ? 15 : 35)
-        .padding(.bottom, isDynamicIsland ? 19 : 15)
+        .padding(.leading, isNotchlessScreen ? 19 : 40)
+        .padding(.trailing, isNotchlessScreen ? 15 : 35)
+        .padding(.bottom, isNotchlessScreen ? 19 : 15)
     }
 
     private var content: some View {
@@ -48,7 +48,7 @@ struct ExternalDriveNotificationView: View {
                 .frame(width: 45, height: 45)
             
         } else {
-            Image(systemName: drive.isDiskImage ? "opticaldiscdrive.fill" : "externaldrive.fill")
+            Image(systemName: "externaldrive.fill")
                 .font(.system(size: 26))
                 .foregroundStyle(.white)
                 .frame(width: 45, height: 45)
@@ -60,12 +60,6 @@ struct ExternalDriveNotificationView: View {
         if drive.eventType == .connected {
             if let capacity = drive.formattedCapacity {
                 Text(capacity)
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
-                
-            } else if drive.isDiskImage {
-                Text("settings.notifications.externalDrives.diskImage")
                     .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(.secondary)
                     .lineLimit(1)

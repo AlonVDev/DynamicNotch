@@ -6,7 +6,6 @@ enum GeneralSettingsStorage {
         static let appearanceMode = "settings.general.appearance.mode"
 
         static let notchBackgroundStyle = "settings.notch.backgroundStyle"
-        static let noNotchStyle = "settings.notch.noNotchStyle"
         static let notchWidth = "notchWidth"
         static let notchHeight = "notchHeight"
         static let menuBarIcon = "isMenuBarIconVisible"
@@ -19,7 +18,6 @@ enum GeneralSettingsStorage {
         static let preferredDisplayName = "settings.general.display.preferred.name"
         static let displayAutoSwitchEnabled = "settings.general.display.autoSwitchEnabled"
         static let appLanguage = "settings.general.language.app"
-        static let notchAnimationPreset = "settings.general.notchAnimationPreset"
         static let hideNotchInFullscreenEnabled = "settings.general.hideNotchInFullscreen"
         static let hideDynamicIslandInFullscreenEnabled = "settings.general.hideDynamicIslandInFullscreen"
         static let notchTapToExpandEnabled = "settings.notch.gestures.tapToExpand"
@@ -135,7 +133,6 @@ enum GeneralSettingsStorage {
         static let calendarSoundAlert = "settings.calendar.soundAlert"
         static let externalDrivesNotificationsEnabled = "settings.notifications.externalDrives.enabled"
         static let externalDrivesNotificationDuration = "settings.notifications.externalDrives.duration"
-        static let externalDrivesIncludeDiskImages = "settings.notifications.externalDrives.includeDiskImages"
         static let externalDrivesShowEjected = "settings.notifications.externalDrives.showEjected"
         static let homePageOrder = "settings.homePage.order"
         static let homePageDisabled = "settings.homePage.disabled"
@@ -164,7 +161,6 @@ enum GeneralSettingsStorage {
         Keys.preferredDisplayName: "",
         Keys.displayAutoSwitchEnabled: true,
         Keys.appLanguage: DynamicNotchLanguage.system.rawValue,
-        Keys.notchAnimationPreset: NotchAnimationPreset.balanced.rawValue,
         Keys.hideNotchInFullscreenEnabled: false,
         Keys.hideDynamicIslandInFullscreenEnabled: false,
         Keys.notchTapToExpandEnabled: true,
@@ -299,7 +295,6 @@ enum GeneralSettingsStorage {
         Keys.calendarSoundAlert: false,
         Keys.externalDrivesNotificationsEnabled: true,
         Keys.externalDrivesNotificationDuration: 8,
-        Keys.externalDrivesIncludeDiskImages: true,
         Keys.externalDrivesShowEjected: true
     ]
 }

@@ -463,10 +463,10 @@ struct SettingsRootView: View {
                 )
             }
 
-        case .notifications:
+        case .externalDevices:
             detailContainer(for: section) {
-                NotificationsSettingsView(
-                    settings: settingsViewModel.notifications
+                ExternalDevicesSettingsView(
+                    settings: settingsViewModel.externalDevices
                 )
             }
             
@@ -647,8 +647,6 @@ struct SettingsRootView: View {
             ActivityPrioritiesSettingsView(applicationSettings: settingsViewModel.application)
         case .notchDisplay:
             DisplaySettingsView(applicationSettings: settingsViewModel.application, availableDisplays: $availableDisplays)
-        case .notchAnimation:
-            AnimationSettingsView(applicationSettings: settingsViewModel.application)
         case .gestures:
             GesturesSettingsView(applicationSettings: settingsViewModel.application)
         case .fileTray:
@@ -667,7 +665,7 @@ struct SettingsRootView: View {
             )
         case .externalDrives:
             ExternalDrivesNotificationsSettingsView(
-                settings: settingsViewModel.notifications
+                settings: settingsViewModel.externalDevices
             )
         }
     }
@@ -705,8 +703,6 @@ struct SettingsRootView: View {
             settingsViewModel.application.resetNotchContentPriorities()
         case .notchDisplay:
             settingsViewModel.application.resetDisplay()
-        case .notchAnimation:
-            settingsViewModel.application.resetAnimation()
         case .gestures:
             settingsViewModel.application.resetGestures()
         case .fileTray:
@@ -714,7 +710,7 @@ struct SettingsRootView: View {
         case .homePagePages:
             settingsViewModel.homePage.resetHomePage()
         case .externalDrives:
-            settingsViewModel.notifications.reset()
+            settingsViewModel.externalDevices.reset()
         default:
             break
         }

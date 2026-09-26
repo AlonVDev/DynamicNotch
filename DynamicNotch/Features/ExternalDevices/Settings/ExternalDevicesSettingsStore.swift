@@ -2,7 +2,7 @@ import Combine
 import Foundation
 
 @MainActor
-final class NotificationsSettingsStore: SettingsStoreBase {
+final class ExternalDevicesSettingsStore: SettingsStoreBase {
     @StoredDefault(key: GeneralSettingsStorage.Keys.externalDrivesNotificationsEnabled, defaultValue: true)
     var isExternalDrivesNotificationsEnabled: Bool
 
@@ -12,9 +12,6 @@ final class NotificationsSettingsStore: SettingsStoreBase {
         transform: SettingsStoreBase.clampNotificationDuration
     )
     var externalDrivesNotificationDuration: Int
-
-    @StoredDefault(key: GeneralSettingsStorage.Keys.externalDrivesIncludeDiskImages, defaultValue: true)
-    var isExternalDrivesIncludeDiskImagesEnabled: Bool
 
     @StoredDefault(key: GeneralSettingsStorage.Keys.externalDrivesShowEjected, defaultValue: true)
     var isExternalDrivesShowEjectedEnabled: Bool
@@ -26,8 +23,9 @@ final class NotificationsSettingsStore: SettingsStoreBase {
     func reset() {
         isExternalDrivesNotificationsEnabled = defaultBool(for: GeneralSettingsStorage.Keys.externalDrivesNotificationsEnabled)
         externalDrivesNotificationDuration = Self.defaultNotificationDuration(for: GeneralSettingsStorage.Keys.externalDrivesNotificationDuration)
-        isExternalDrivesIncludeDiskImagesEnabled = defaultBool(for: GeneralSettingsStorage.Keys.externalDrivesIncludeDiskImages)
         isExternalDrivesShowEjectedEnabled = defaultBool(for: GeneralSettingsStorage.Keys.externalDrivesShowEjected)
     }
 }
+
+typealias NotificationsSettingsStore = ExternalDevicesSettingsStore
 

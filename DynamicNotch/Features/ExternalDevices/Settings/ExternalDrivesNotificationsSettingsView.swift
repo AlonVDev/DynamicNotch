@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ExternalDrivesNotificationsSettingsView: View {
-    @ObservedObject var settings: NotificationsSettingsStore
+    @ObservedObject var settings: ExternalDevicesSettingsStore
 
     private var notificationDurationRange: ClosedRange<Double> {
         Double(SettingsStoreBase.notificationDurationRange.lowerBound)...Double(SettingsStoreBase.notificationDurationRange.upperBound)
@@ -23,20 +23,6 @@ struct ExternalDrivesNotificationsSettingsView: View {
                 color: .gray,
                 isOn: $settings.isExternalDrivesNotificationsEnabled,
                 accessibilityIdentifier: "settings.notifications.externalDrives.toggle"
-            )
-
-            Divider()
-                .opacity(0.6)
-                .padding(.leading, 43)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
-            
-            SettingsToggleRow(
-                title: "settings.notifications.externalDrives.includeDiskImages.title",
-                description: "settings.notifications.externalDrives.includeDiskImages.desc",
-                systemImage: "opticaldiscdrive.fill",
-                color: .gray,
-                isOn: $settings.isExternalDrivesIncludeDiskImagesEnabled,
-                accessibilityIdentifier: "settings.notifications.externalDrives.includeDiskImages"
             )
 
             Divider()

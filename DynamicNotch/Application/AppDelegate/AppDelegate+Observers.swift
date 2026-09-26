@@ -68,17 +68,10 @@ extension AppDelegate {
                 }
             }
             .store(in: &cancellables)
-        settingsViewModel.notifications.$isExternalDrivesNotificationsEnabled
+        settingsViewModel.externalDevices.$isExternalDrivesNotificationsEnabled
             .removeDuplicates()
             .sink { [weak self] _ in
                 self?.updateExternalDrivesMonitoringState()
-            }
-            .store(in: &cancellables)
-
-        settingsViewModel.notifications.$isExternalDrivesIncludeDiskImagesEnabled
-            .removeDuplicates()
-            .sink { [weak self] isInclude in
-                self?.externalDrivesMonitor.includeDiskImages = isInclude
             }
             .store(in: &cancellables)
 
@@ -181,8 +174,7 @@ extension AppDelegate {
     func updateExternalDrivesMonitoringState() {
         guard !isRunningUITests else { return }
 
-        let isEnabled = settingsViewModel.notifications.isExternalDrivesNotificationsEnabled
-        externalDrivesMonitor.includeDiskImages = settingsViewModel.notifications.isExternalDrivesIncludeDiskImagesEnabled
+        let isEnabled = settingsViewModel.externalDevices.isExternalDrivesNotificationsEnabled
 
         if isEnabled {
             externalDrivesMonitor.startMonitoring()

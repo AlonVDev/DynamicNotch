@@ -229,12 +229,12 @@ final class NotchViewModel: ObservableObject {
     var dynamicIslandCornerRadius: CGFloat {
         let height = presentedNotchSize.height
         if isDisplayingExpandedLiveActivity {
-            if let customizable = displayedContent as? DynamicIslandCustomizable {
+            if let customizable = displayedContent {
                 return customizable.expandedDynamicIslandCornerRadius(baseHeight: height)
             }
             return height * 0.2
         } else {
-            if let customizable = displayedContent as? DynamicIslandCustomizable {
+            if let customizable = displayedContent {
                 return customizable.dynamicIslandCornerRadius(baseHeight: height)
             }
             return height * 0.5
@@ -284,12 +284,8 @@ final class NotchViewModel: ObservableObject {
             NSScreen.metrics(for: settings)
         }
         self.engine = engine ?? NotchEngine(
-            animations: { [weak settings] in
-                if let animations {
-                    return animations
-                }
-                guard let settings else { return .default }
-                return .preset(settings.notchAnimationPreset)
+            animations: {
+                animations ?? .balanced
             },
             hideDelay: hideDelay,
             queueDelay: queueDelay
@@ -311,32 +307,29 @@ final class NotchViewModel: ObservableObject {
         let widthScale = scale > 1.0 ? 1.0 + (scale - 1.0) * 0.35 : scale
         
         let isDynamicIsland = screenMetrics.topInset == 0
-        let isTopAttachedNotch = isDynamicIsland && settings.noNotchStyle == .notch
         let widthOffset = CGFloat(settings.notchWidth) + 3
         let heightOffset = CGFloat(settings.notchHeight)
-        let baseHeightAdjustment: CGFloat = (isDynamicIsland ? -1 : 0)
-        let topAttachedWidthBonus: CGFloat = isTopAttachedNotch ? 30 : 0
-        let topAttachedHeightBonus: CGFloat = isTopAttachedNotch ? 4 : 0
+        let baseHeightAdjustment: CGFloat = isDynamicIsland ? 1 : 0
         
         if let notchSize = screenMetrics.notchSize {
-            let baseWidth = notchSize.width + 14.scaled(by: widthScale) + widthOffset + topAttachedWidthBonus
+            let baseWidth = notchSize.width + 14.scaled(by: widthScale) + widthOffset
             let finalWidth = isDynamicIsland ? baseWidth * 0.85 : baseWidth
             
             engine.updateBaseGeometry(
                 width: finalWidth,
-                height: notchSize.height + heightOffset + baseHeightAdjustment + topAttachedHeightBonus,
+                height: notchSize.height + heightOffset + baseHeightAdjustment,
                 scale: scale,
                 isDynamicIsland: isDynamicIsland
             )
             
         } else {
             let baseWidthValue: CGFloat = isDynamicIsland ? 120 : 190
-            let baseWidth = (baseWidthValue * widthScale) + widthOffset + topAttachedWidthBonus
+            let baseWidth = (baseWidthValue * widthScale) + widthOffset
             let finalWidth = isDynamicIsland ? baseWidth * 0.85 : baseWidth
             
             engine.updateBaseGeometry(
                 width: finalWidth,
-                height: 26 + heightOffset + baseHeightAdjustment + topAttachedHeightBonus,
+                height: 26 + heightOffset + baseHeightAdjustment,
                 scale: scale,
                 isDynamicIsland: isDynamicIsland
             )
@@ -538,9 +531,27 @@ final class NotchViewModel: ObservableObject {
         return model
     }
 
-    func contentTransition(notchHeight: CGFloat, baseHeight: CGFloat, isExpandedPresentation: Bool) -> AnyTransition {
-        let expandedTransition = AnyTransition.notchExpanded(notchHeight: notchHeight, baseHeight: baseHeight)
-        let compactTransition = AnyTransition.notchCompact(notchHeight: notchHeight, baseHeight: baseHeight)
+    func contentTransition(
+        notchWidth: CGFloat? = nil,
+        notchHeight: CGFloat,
+        baseWidth: CGFloat? = nil,
+        baseHeight: CGFloat,
+        isExpandedPresentation: Bool
+    ) -> AnyTransition {
+        let width = notchWidth ?? presentedNotchSize.width
+        let bWidth = baseWidth ?? notchModel.baseWidth
+        let expandedTransition = AnyTransition.notchExpanded(
+            notchHeight: notchHeight,
+            baseHeight: baseHeight,
+            isNotchlessScreen: isDynamicIsland
+        )
+        let compactTransition = AnyTransition.notchCompact(
+            notchWidth: width,
+            notchHeight: notchHeight,
+            baseWidth: bWidth,
+            baseHeight: baseHeight,
+            isNotchlessScreen: isDynamicIsland
+        )
 
         if isExpandedPresentation {
             return .asymmetric(
@@ -549,8 +560,8 @@ final class NotchViewModel: ObservableObject {
             )
         } else {
             return .asymmetric(
-                insertion: compactTransition.animation(animations.closeLiveActivityContentTransition),
-                removal: compactTransition.animation(animations.openContentTransition)
+                insertion: compactTransition.animation(animations.openContentTransition),
+                removal: compactTransition.animation(animations.closeLiveActivityContentTransition)
             )
         }
     }
