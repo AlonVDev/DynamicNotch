@@ -29,35 +29,3 @@ enum FileTrayUsageMode: String, CaseIterable {
         }
     }
 }
-
-enum FileTrayScrollDirection: String, CaseIterable, Equatable {
-    case horizontal
-    case vertical
-
-    var title: LocalizedStringKey {
-        switch self {
-        case .horizontal:
-            return "settings.drop.fileTrayScrollDirection.horizontal"
-        case .vertical:
-            return "settings.drop.fileTrayScrollDirection.vertical"
-        }
-    }
-
-    var scrollAxis: Axis.Set {
-        switch self {
-        case .horizontal:
-            return .horizontal
-        case .vertical:
-            return .vertical
-        }
-    }
-
-    static func resolved(_ rawValue: String?) -> FileTrayScrollDirection {
-        switch rawValue {
-        case FileTrayScrollDirection.vertical.rawValue:
-            return .vertical
-        default:
-            return .horizontal
-        }
-    }
-}

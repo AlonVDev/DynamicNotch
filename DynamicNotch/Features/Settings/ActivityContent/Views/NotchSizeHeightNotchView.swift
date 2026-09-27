@@ -18,8 +18,8 @@ struct NotchSizeHeightNotchView: View {
             Spacer()
             AnimatedLevelText(level: settingsViewModel.notchHeight, fontSize: isNotchlessScreen ? 16 : 18)
         }
-        .font(.system(size: 18))
+        .font(.system(size: isNotchlessScreen ? 16 : 18))
         .foregroundColor(.white)
-        .padding(.horizontal, isNotchlessScreen ? 8.scaled(by: scale) : 16.scaled(by: scale))
+        .padding(.horizontal, isNotchlessScreen ? 6.scaled(by: scale) : 16.scaled(by: scale))
     }
 }

@@ -259,6 +259,7 @@ final class NotchEventCoordinator: ObservableObject {
 
     func handleNotchWidthEvent(_ event: NotchSizeEvent) {
         guard !isOnboardingActive else { return }
+        notchViewModel.updateDimensions()
         guard settingsViewModel.isTemporaryActivityEnabled(.notchSize) else { return }
 
         systemHandler.handleNotchSize(event)

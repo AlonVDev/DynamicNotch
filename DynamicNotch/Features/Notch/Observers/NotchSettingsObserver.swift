@@ -322,5 +322,19 @@ final class NotchSettingsObserver {
                 self?.onLanguageChanged(language)
             }
             .store(in: &cancellables)
+
+        settingsViewModel.application.$notchWidth
+            .dropFirst()
+            .sink { [weak self] _ in
+                self?.notchViewModel.updateDimensions()
+            }
+            .store(in: &cancellables)
+
+        settingsViewModel.application.$notchHeight
+            .dropFirst()
+            .sink { [weak self] _ in
+                self?.notchViewModel.updateDimensions()
+            }
+            .store(in: &cancellables)
     }
 }

@@ -22,26 +22,22 @@ struct TrayExpandedActiveNotchView: View {
                 Spacer()
             }
             .padding(.top, isNotchlessScreen ? 8.scaled(by: scale) : 4.scaled(by: scale))
-            .padding(.horizontal, isNotchlessScreen ? 30 : 42)
+            .padding(.horizontal, isNotchlessScreen ? 12 : 42)
             
             VStack(alignment: .leading) {
                 Spacer()
 
-                ScrollView(scrollDirection.scrollAxis, showsIndicators: false) {
+                ScrollView(.horizontal, showsIndicators: false) {
                     trayItems
                 }
                 .frame(maxHeight: 100)
                 .mask {
-                    ScrollFadeMask(cornerRadius: 24, maskType: .all)
+                    ScrollFadeMask(cornerRadius: 24, maskType: .horizontalFade)
                 }
             }
-            .padding(.horizontal, isNotchlessScreen ? 20 : 34)
+            .padding(.horizontal, isNotchlessScreen ? 4 : 34)
             .padding(.bottom, isNotchlessScreen ? 7 : 14)
         }
-    }
-
-    private var scrollDirection: FileTrayScrollDirection {
-        mediaSettings.fileTrayScrollDirection
     }
 
     private var header: some View {
@@ -90,28 +86,11 @@ struct TrayExpandedActiveNotchView: View {
         .foregroundStyle(.white)
     }
 
-    @ViewBuilder
     private var trayItems: some View {
-        if scrollDirection == .horizontal {
-            HStack(spacing: 10) {
-                trayItemViews
-            }
-            .padding(.horizontal, 8)
-        } else {
-            LazyVGrid(
-                columns: [
-                    GridItem(.fixed(80), spacing: 10),
-                    GridItem(.fixed(80), spacing: 10),
-                    GridItem(.fixed(80), spacing: 10),
-                    GridItem(.fixed(80), spacing: 10)
-                ],
-                spacing: 10
-            ) {
-                trayItemViews
-            }
-            .padding(.top, 3)
-            .padding(.horizontal, 8)
+        HStack(spacing: 10) {
+            trayItemViews
         }
+        .padding(.horizontal, 8)
     }
 
     @ViewBuilder

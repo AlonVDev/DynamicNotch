@@ -18,9 +18,8 @@ struct AirDropActiveNotchView: View {
             Spacer()
             statusIndicator
         }
-        .padding(.vertical, 10)
         .padding(.leading, isNotchlessScreen ? 3.scaled(by: scale) : 13.scaled(by: scale))
-        .padding(.trailing, isNotchlessScreen ? 4.scaled(by: scale) : 12.scaled(by: scale))
+        .padding(.trailing, isNotchlessScreen ? 3.scaled(by: scale) : 12.scaled(by: scale))
         .onAppear {
             withAnimation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true)) {
                 isPulsing = true
@@ -39,7 +38,7 @@ struct AirDropActiveNotchView: View {
                 .resizable()
                 .renderingMode(.template)
                 .foregroundStyle(Color.blue)
-                .frame(width: isNotchlessScreen ? 16 : 18, height: isNotchlessScreen ? 16 : 18)
+                .frame(width: 18, height: 18)
         }
     }
     
@@ -59,12 +58,12 @@ struct AirDropActiveNotchView: View {
                 
             case .completed:
                 Image(systemName: "checkmark.circle.fill")
-                    .font(.system(size: isNotchlessScreen ? 14 : 20, weight: .semibold))
+                    .font(.system(size: isNotchlessScreen ? 16 : 20, weight: .semibold))
                     .foregroundStyle(Color.blue)
                 
             case .failed:
                 Image(systemName: "exclamationmark.circle.fill")
-                    .font(.system(size: isNotchlessScreen ? 14 : 20, weight: .semibold))
+                    .font(.system(size: isNotchlessScreen ? 16 : 20, weight: .semibold))
                     .foregroundStyle(Color.red)
             }
         }

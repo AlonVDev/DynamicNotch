@@ -15,6 +15,10 @@ struct LanguageChangedNotchContent: NotchContentProtocol, DynamicIslandCustomiza
         return .init(width: baseWidth + 130, height: baseHeight)
     }
     
+    func dynamicIslandSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+        return .init(width: baseWidth + 110, height: baseHeight)
+    }
+    
     @MainActor
     func makeView() -> AnyView {
         AnyView(LanguageChangedNotchView(language: language))

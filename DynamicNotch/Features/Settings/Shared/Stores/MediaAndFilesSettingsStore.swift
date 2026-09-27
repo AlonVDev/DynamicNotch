@@ -5,7 +5,6 @@ extension NowPlayingProgressTintStyle: StoredSettingValue {}
 extension NowPlayingSourceFilter: StoredSettingValue {}
 extension DownloadProgressIndicatorStyle: StoredSettingValue {}
 extension FileTrayUsageMode: StoredSettingValue {}
-extension FileTrayScrollDirection: StoredSettingValue {}
 extension DragAndDropActivityMode: StoredSettingValue {}
 extension TimerSound: StoredSettingValue {}
 
@@ -56,9 +55,6 @@ final class MediaAndFilesSettingsStore: SettingsStoreBase {
 
     @StoredDefault(key: GeneralSettingsStorage.Keys.fileTrayUsageMode, defaultValue: .copy)
     var fileTrayUsageMode: FileTrayUsageMode
-
-    @StoredDefault(key: GeneralSettingsStorage.Keys.fileTrayScrollDirection, defaultValue: .horizontal)
-    var fileTrayScrollDirection: FileTrayScrollDirection
 
     @StoredDefault(key: GeneralSettingsStorage.Keys.fileTrayRemoveButtonHidden, defaultValue: false)
     var isFileTrayRemoveButtonHidden: Bool
@@ -118,7 +114,6 @@ final class MediaAndFilesSettingsStore: SettingsStoreBase {
     func resetFileTray() {
         isTrayLiveActivityEnabled = defaultBool(for: GeneralSettingsStorage.Keys.trayLiveActivityEnabled)
         fileTrayUsageMode = .copy
-        fileTrayScrollDirection = .horizontal
         isFileTrayRemoveButtonHidden = defaultBool(for: GeneralSettingsStorage.Keys.fileTrayRemoveButtonHidden)
     }
 

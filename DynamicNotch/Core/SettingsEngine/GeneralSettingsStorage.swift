@@ -63,7 +63,6 @@ enum GeneralSettingsStorage {
         static let airDropLiveActivityEnabled = "settings.live.airDrop"
         static let dragAndDropActivityMode = "settings.live.dragAndDrop.mode"
         static let fileTrayUsageMode = "settings.live.tray.usageMode"
-        static let fileTrayScrollDirection = "settings.live.tray.scrollDirection"
         static let fileTrayRemoveButtonHidden = "settings.live.tray.removeButtonHidden"
         static let trayLiveActivityEnabled = "settings.live.tray"
         static let timerLiveActivityEnabled = "settings.live.timer"
@@ -195,7 +194,6 @@ enum GeneralSettingsStorage {
         Keys.dragAndDropActivityMode: DragAndDropActivityMode.combined.rawValue,
         Keys.trayLiveActivityEnabled: true,
         Keys.fileTrayUsageMode: FileTrayUsageMode.copy.rawValue,
-        Keys.fileTrayScrollDirection: FileTrayScrollDirection.horizontal.rawValue,
         Keys.fileTrayRemoveButtonHidden: false,
         Keys.timerLiveActivityEnabled: true,
         Keys.timerSoundEnabled: true,

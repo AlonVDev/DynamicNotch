@@ -24,9 +24,9 @@ struct NotchSizeWidthNotchView: View {
                 Image(systemName: "chevron.right")
             }
         }
-        .font(.system(size: 18))
+        .font(.system(size: isNotchlessScreen ? 16 : 18))
         .foregroundColor(.white)
-        .padding(.horizontal, isNotchlessScreen ? 12.scaled(by: scale) : 14.scaled(by: scale))
+        .padding(.horizontal, isNotchlessScreen ? 5.scaled(by: scale) : 14.scaled(by: scale))
         .padding(.bottom, 10)
     }
 }
