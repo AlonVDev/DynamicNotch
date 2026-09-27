@@ -193,4 +193,8 @@ extension NSScreen {
 
         return nil
     }
+
+    var isNotchless: Bool {
+        safeAreaInsets.top == 0
+    }
 }

@@ -36,20 +36,6 @@ struct NotchSettingsView: View {
                 accessibilityIdentifier: "settings.general.showNotchStroke"
             )
             
-            Divider()
-                .opacity(0.6)
-                .padding(.leading, 43)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
-            
-            SettingsToggleRow(
-                title: "settings.notch.defaultStrokeColor.title",
-                description: "settings.notch.defaultStrokeColor.desc",
-                systemImage: "paintbrush.pointed.fill",
-                color: LinearGradient.purpleGradient,
-                isOn: $applicationSettings.isDefaultActivityStrokeEnabled,
-                accessibilityIdentifier: "settings.general.defaultActivityStroke"
-            )
-            
             Divider().opacity(0.6)
             
             SettingsSliderRow(

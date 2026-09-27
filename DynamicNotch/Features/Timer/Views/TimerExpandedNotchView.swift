@@ -45,9 +45,9 @@ private struct TimerExpandedNotchViewInternal<VM: ObservableObject>: View {
                 rightContent
             }
         }
-        .padding(.leading, isNotchlessScreen ? 14 : 32)
+        .padding(.leading, isNotchlessScreen ? 15 : 32)
         .padding(.trailing, isNotchlessScreen ? 18 : 38)
-        .padding(.bottom, isNotchlessScreen ? 14 : 12)
+        .padding(.bottom, isNotchlessScreen ? 15 : 12)
     }
     
     private var leftContent: some View {

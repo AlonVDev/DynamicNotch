@@ -42,6 +42,8 @@ struct VpnPageNotchView: View {
                 noSelectionView
             }
         }
+        .padding(.horizontal, isNotchlessScreen ? 14 : 36)
+        .padding(.bottom, 10)
         .onAppear {
             viewModel.startMonitoring()
             updateTimer()
@@ -93,10 +95,8 @@ struct VpnPageNotchView: View {
                 
                 timer(for: vpn)
             }
-            
             buttons(for: vpn)
         }
-        .padding(.horizontal, isNotchlessScreen ? 2 : 4)
     }
     
     @ViewBuilder

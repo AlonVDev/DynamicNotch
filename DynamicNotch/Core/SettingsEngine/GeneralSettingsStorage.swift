@@ -10,7 +10,6 @@ enum GeneralSettingsStorage {
         static let notchHeight = "notchHeight"
         static let menuBarIcon = "isMenuBarIconVisible"
         static let notchStrokeEnabled = "isShowNotchStrokeEnabled"
-        static let defaultActivityStrokeEnabled = "settings.general.defaultActivityStroke"
         static let notchStrokeWidth = "notchStrokeWidth"
         static let notchStrokeOpacity = "notchStrokeOpacity"
         static let displayLocation = "displayLocation"
@@ -59,22 +58,17 @@ enum GeneralSettingsStorage {
         static let nowPlayingPauseHideDelay = "settings.nowPlaying.pauseHideDelay"
         static let nowPlayingSourceFilter = "settings.nowPlaying.sourceFilter"
         static let downloadsLiveActivityEnabled = "settings.live.downloads"
-        static let downloadsDefaultStrokeEnabled = "settings.live.downloads.defaultStroke"
         static let downloadsProgressIndicatorStyle = "settings.live.downloads.progressIndicatorStyle"
         static let dragAndDropLiveActivityEnabled = "settings.live.dragAndDrop"
         static let airDropLiveActivityEnabled = "settings.live.airDrop"
-        static let airDropDefaultStrokeEnabled = "settings.live.airDrop.defaultStroke"
         static let dragAndDropActivityMode = "settings.live.dragAndDrop.mode"
         static let fileTrayUsageMode = "settings.live.tray.usageMode"
-        static let fileTrayScrollDirection = "settings.live.tray.scrollDirection"
         static let fileTrayRemoveButtonHidden = "settings.live.tray.removeButtonHidden"
         static let trayLiveActivityEnabled = "settings.live.tray"
         static let timerLiveActivityEnabled = "settings.live.timer"
-        static let timerDefaultStrokeEnabled = "settings.live.timer.defaultStroke"
         static let timerSoundEnabled = "settings.timer.soundEnabled"
         static let timerSound = "settings.timer.sound"
         static let screenRecordingLiveActivityEnabled = "settings.live.screenRecording"
-        static let screenRecordingDefaultStrokeEnabled = "settings.live.screenRecording.defaultStroke"
         static let screenRecordingStyle = "settings.screenRecording.style"
         static let screenshotActivityEnabled = "settings.live.screenshot"
         static let screenshotDisableSystemThumbnail = "settings.screenshot.disableSystemThumbnail"
@@ -99,8 +93,6 @@ enum GeneralSettingsStorage {
         static let bluetoothAppearanceStyle = "settings.bluetooth.appearanceStyle"
         static let bluetoothBatteryStrokeEnabled = "settings.bluetooth.batteryStrokeEnabled"
         static let bluetoothBatteryIndicatorStyle = "settings.bluetooth.batteryIndicatorStyle"
-        static let wifiTemporaryActivityEnabled = "settings.temporary.wifi"
-        static let wifiTemporaryActivityDuration = "settings.temporary.wifi.duration"
         static let vpnTemporaryActivityEnabled = "settings.temporary.vpn"
         static let vpnTemporaryActivityDuration = "settings.temporary.vpn.duration"
         static let vpnDisconnectedTemporaryActivityEnabled = "settings.temporary.vpnDisconnected"
@@ -114,10 +106,6 @@ enum GeneralSettingsStorage {
         static let focusOffTemporaryActivityDuration = "settings.temporary.focusOff.duration"
         static let notchSizeTemporaryActivityEnabled = "settings.temporary.notchSize"
         static let notchSizeTemporaryActivityDuration = "settings.temporary.notchSize.duration"
-        static let focusDefaultStrokeEnabled = "settings.focus.defaultStroke"
-        static let hotspotDefaultStrokeEnabled = "settings.live.hotspot.defaultStroke"
-        static let lowPowerDefaultStrokeEnabled = "settings.battery.lowPower.defaultStroke"
-        static let fullPowerDefaultStrokeEnabled = "settings.battery.fullPower.defaultStroke"
         static let lowBatterySound = "settings.battery.lowBatterySound"
         static let fullBatterySound = "settings.battery.fullBatterySound"
         static let homePageLiveActivity = "settings.homePage.liveActivity"
@@ -138,7 +126,6 @@ enum GeneralSettingsStorage {
         static let homePageDisabled = "settings.homePage.disabled"
         static let homePagePageIndicator = "settings.homePage.pageIndicator"
         static let homePageIndicatorSize = "settings.homePage.indicatorSize"
-        static let homePageScrollAxis = "settings.homePage.scrollAxis"
         static let selectedVPNID = "settings.vpn.selectedID"
     }
 
@@ -153,7 +140,6 @@ enum GeneralSettingsStorage {
         Keys.notchHeight: 0,
         Keys.menuBarIcon: true,
         Keys.notchStrokeEnabled: true,
-        Keys.defaultActivityStrokeEnabled: false,
         Keys.notchStrokeWidth: 2.5,
         Keys.notchStrokeOpacity: 1.0,
         Keys.displayLocation: NotchDisplayLocation.main.rawValue,
@@ -202,22 +188,17 @@ enum GeneralSettingsStorage {
         Keys.nowPlayingPauseHideDelay: 5,
         Keys.nowPlayingSourceFilter: NowPlayingSourceFilter.any.rawValue,
         Keys.downloadsLiveActivityEnabled: true,
-        Keys.downloadsDefaultStrokeEnabled: false,
         Keys.downloadsProgressIndicatorStyle: DownloadProgressIndicatorStyle.percent.rawValue,
         Keys.dragAndDropLiveActivityEnabled: true,
         Keys.airDropLiveActivityEnabled: true,
-        Keys.airDropDefaultStrokeEnabled: false,
         Keys.dragAndDropActivityMode: DragAndDropActivityMode.combined.rawValue,
         Keys.trayLiveActivityEnabled: true,
         Keys.fileTrayUsageMode: FileTrayUsageMode.copy.rawValue,
-        Keys.fileTrayScrollDirection: FileTrayScrollDirection.horizontal.rawValue,
         Keys.fileTrayRemoveButtonHidden: false,
         Keys.timerLiveActivityEnabled: true,
-        Keys.timerDefaultStrokeEnabled: false,
         Keys.timerSoundEnabled: true,
         Keys.timerSound: TimerSound.radar.rawValue,
         Keys.screenRecordingLiveActivityEnabled: true,
-        Keys.screenRecordingDefaultStrokeEnabled: false,
         Keys.screenRecordingStyle: ScreenRecordingStyle.detailed.rawValue,
         Keys.screenshotActivityEnabled: true,
         Keys.screenshotDisableSystemThumbnail: true,
@@ -255,8 +236,6 @@ enum GeneralSettingsStorage {
         Keys.bluetoothAppearanceStyle: BluetoothAppearanceStyle.compact.rawValue,
         Keys.bluetoothBatteryStrokeEnabled: false,
         Keys.bluetoothBatteryIndicatorStyle: BluetoothBatteryIndicatorStyle.percent.rawValue,
-        Keys.wifiTemporaryActivityEnabled: true,
-        Keys.wifiTemporaryActivityDuration: 3,
         Keys.vpnTemporaryActivityEnabled: true,
         Keys.vpnTemporaryActivityDuration: 5,
         Keys.vpnDisconnectedTemporaryActivityEnabled: true,
@@ -270,10 +249,6 @@ enum GeneralSettingsStorage {
         Keys.focusOffTemporaryActivityDuration: 3,
         Keys.notchSizeTemporaryActivityEnabled: true,
         Keys.notchSizeTemporaryActivityDuration: 2,
-        Keys.focusDefaultStrokeEnabled: false,
-        Keys.hotspotDefaultStrokeEnabled: false,
-        Keys.lowPowerDefaultStrokeEnabled: false,
-        Keys.fullPowerDefaultStrokeEnabled: false,
         Keys.lowBatterySound: true,
         Keys.fullBatterySound: true,
         Keys.homePageLiveActivity: true,
@@ -281,7 +256,6 @@ enum GeneralSettingsStorage {
         Keys.homePageDisabled: [String](),
         Keys.homePagePageIndicator: true,
         Keys.homePageIndicatorSize: "medium",
-        Keys.homePageScrollAxis: HomePageScrollAxis.horizontal.rawValue,
         Keys.selectedVPNID: "",
         Keys.calendarLiveActivity: true,
         Keys.calendarHideWhenFocused: true,

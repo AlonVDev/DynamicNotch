@@ -13,11 +13,9 @@ enum OnboardingEvent: Equatable {
 
 struct OnboardingNotchContent : NotchContentProtocol, DynamicIslandCustomizable {
     let id: String
-    
     let stackID = OnboardingSteps.stackID
     let step: OnboardingSteps
     let notchEventCoordinator: NotchEventCoordinator
-    
     var priority: Int { NotchContentRegistry.Onboarding.priority }
     
     init(step: OnboardingSteps, notchEventCoordinator: NotchEventCoordinator) {
@@ -28,6 +26,10 @@ struct OnboardingNotchContent : NotchContentProtocol, DynamicIslandCustomizable 
     
     func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         step.notchSize(baseWidth: baseWidth, baseHeight: baseHeight)
+    }
+    
+    func dynamicIslandSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+        step.dynamicIslandSize(baseWidth: baseWidth, baseHeight: baseHeight)
     }
     
     func cornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {

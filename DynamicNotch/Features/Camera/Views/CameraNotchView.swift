@@ -28,23 +28,27 @@ struct CameraNotchView: View {
     
     var body: some View {
         ZStack {
-            if !isCameraStarted {
-                cameraStartView
-            } else {
+            if isCameraStarted {
                 Group {
                     switch cameraViewModel.cameraState {
                     case .ready:
                         cameraView
+                            .padding(.horizontal, isNotchlessScreen ? 8 : 42)
                         
                     case .unavailable:
                         cameraUnavailableView
+                            .padding(.horizontal, isNotchlessScreen ? 8 : 42)
                         
                     case .unknown:
                         progressView
                     }
                 }
+            } else {
+                cameraStartView
+                    .padding(.horizontal, isNotchlessScreen ? 14 : 42)
             }
         }
+        .padding(.bottom, 8)
         .onAppear {
             previewID = UUID()
         }
@@ -67,7 +71,6 @@ struct CameraNotchView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 30))
                     .id(previewID)
                     .transition(.blurAndFade.combined(with: .opacity).animation(.spring(response: 0.6)))
-                    .padding(.horizontal, isNotchlessScreen ? 0 : 12)
                 
                 HStack {
                     cameraButton
@@ -169,9 +172,9 @@ struct CameraNotchView: View {
                 ))
             }) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: isNotchlessScreen ? 24 : 34)
+                    RoundedRectangle(cornerRadius: isNotchlessScreen ? 34 : 34)
                         .fill(.gray.opacity(0.2))
-                        .frame(height: 110)
+                        .frame(height: isNotchlessScreen ? 115 : 110)
                     
                     VStack(spacing: 10) {
                         Image(systemName: "web.camera.fill")
@@ -214,18 +217,9 @@ struct CameraNotchView: View {
     @ViewBuilder
     private var progressView: some View {
         VStack {
-            Spacer()
-            
-            ZStack {
-                RoundedRectangle(cornerRadius: 28)
-                    .fill(.gray.opacity(0.15))
-                    .frame(height: isCameraLarge ? 205 : 165)
-                
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
-            }
+            ProgressView()
+                .progressViewStyle(CircularProgressViewStyle(tint: .white))
         }
-        .padding(.horizontal, isNotchlessScreen ? 2 : 12)
     }
 }
 

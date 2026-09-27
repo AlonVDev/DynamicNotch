@@ -18,8 +18,6 @@ struct FocusOffNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     var isExpandable: Bool { true }
 
     var strokeColor: Color {
-        settingsViewModel.isDefaultActivityStrokeEnabled ?
-        .white.opacity(0.2) :
         focusModeType.tint.opacity(0.3)
     }
 
@@ -35,6 +33,10 @@ struct FocusOffNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
 
     func expandedSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         return .init(width: baseWidth + 140, height: baseHeight + 60)
+    }
+    
+    func expandedDynamicIslandSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+        return .init(width: baseWidth + 200, height: baseHeight + 50)
     }
 
     func expandedCornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {

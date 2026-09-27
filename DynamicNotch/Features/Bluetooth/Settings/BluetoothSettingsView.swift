@@ -8,12 +8,8 @@ struct BluetoothSettingsView: View {
         Double(SettingsStoreBase.temporaryActivityDurationRange.lowerBound)...Double(SettingsStoreBase.temporaryActivityDurationRange.upperBound)
     }
 
-    private var isBatteryStrokeLocked: Bool {
-        applicationSettings.isDefaultActivityStrokeEnabled
-    }
-
     private var isBatteryStrokeActive: Bool {
-        settings.isBluetoothBatteryStrokeEnabled && applicationSettings.isDefaultActivityStrokeEnabled == false
+        settings.isBluetoothBatteryStrokeEnabled
     }
 
     private var bluetoothPreviewStrokeColor: Color {
@@ -105,8 +101,6 @@ struct BluetoothSettingsView: View {
                 isOn: $settings.isBluetoothBatteryStrokeEnabled,
                 accessibilityIdentifier: "settings.activities.temporary.bluetooth.batteryStroke"
             )
-            .disabled(isBatteryStrokeLocked)
-            .opacity(isBatteryStrokeLocked ? 0.5 : 1)
         }
     }
     

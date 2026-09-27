@@ -26,53 +26,58 @@ struct FullPowerNotchView: View {
                     tint: batteryColor
                 )
             } else {
-                VStack {
-                    Spacer()
+                detailStyle
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var detailStyle: some View {
+        VStack {
+            Spacer()
 
-                    HStack {
-                        VStack(alignment: .leading, spacing: 3) {
-                            title
-                            description
-                        }
+            HStack {
+                VStack(alignment: .leading, spacing: 3) {
+                    title
+                    description
+                }
 
-                        Spacer()
+                Spacer()
 
-                        if showBatteryIndicator {
-                            if powerService.isLowPowerMode {
-                                yellowIndicator
-                                    .transition(.blurAndFade.animation(.spring(duration: 0.4)).combined(with: .scale))
-                            } else {
-                                greenIndicator
-                                    .transition(.blurAndFade.animation(.spring(duration: 0.4)).combined(with: .scale))
-                            }
-                        } else {
-                            magSafeIndicator
-                                .transition(.blurAndFade.animation(.spring(duration: 0.4)).combined(with: .scale))
-                                .padding(.trailing, 5)
-                        }
+                if showBatteryIndicator {
+                    if powerService.isLowPowerMode {
+                        yellowIndicator
+                            .transition(.blurAndFade.animation(.spring(duration: 0.4)).combined(with: .scale))
+                    } else {
+                        greenIndicator
+                            .transition(.blurAndFade.animation(.spring(duration: 0.4)).combined(with: .scale))
+                    }
+                } else {
+                    magSafeIndicator
+                        .transition(.blurAndFade.animation(.spring(duration: 0.4)).combined(with: .scale))
+                        .padding(.trailing, 5)
+                }
+            }
+        }
+        .padding(.leading, isNotchlessScreen ? 25 : 40)
+        .padding(.trailing, isNotchlessScreen ? 20 : 35)
+        .padding(.bottom, isNotchlessScreen ? 20 : 15)
+        .onAppear {
+            showBatteryIndicator = true
+            changeBatteryIndicator = true
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                if showBatteryIndicator {
+                    withAnimation(.spring(duration: 0.4)) {
+                        showBatteryIndicator = false
                     }
                 }
-                .padding(.leading, isNotchlessScreen ? 25 : 40)
-                .padding(.trailing, isNotchlessScreen ? 20 : 35)
-                .padding(.bottom, isNotchlessScreen ? 18 : 15)
-                .onAppear {
-                    showBatteryIndicator = true
-                    changeBatteryIndicator = true
+            }
 
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        if showBatteryIndicator {
-                            withAnimation(.spring(duration: 0.4)) {
-                                showBatteryIndicator = false
-                            }
-                        }
-                    }
-
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                        if changeBatteryIndicator {
-                            withAnimation(.spring(duration: 0.2)) {
-                                changeBatteryIndicator = false
-                            }
-                        }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                if changeBatteryIndicator {
+                    withAnimation(.spring(duration: 0.2)) {
+                        changeBatteryIndicator = false
                     }
                 }
             }

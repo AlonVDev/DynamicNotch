@@ -23,6 +23,10 @@ struct NotchSizeWidthNotchContent: NotchContentProtocol, DynamicIslandCustomizab
         return .init(width: baseWidth, height: baseHeight + 40)
     }
     
+    func dynamicIslandCornerRadius(baseHeight: CGFloat) -> CGFloat {
+        baseHeight * 0.2
+    }
+    
     @MainActor
     func makeView() -> AnyView {
         AnyView(NotchSizeWidthNotchView(settingsViewModel: settingsViewModel))

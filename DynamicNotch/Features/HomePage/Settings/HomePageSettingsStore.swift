@@ -3,7 +3,6 @@ import Combine
 import SwiftUI
 
 extension HomePageIndicatorSize: StoredSettingValue {}
-extension HomePageScrollAxis: StoredSettingValue {}
 
 @MainActor
 final class HomePageSettingsStore: SettingsStoreBase {
@@ -15,9 +14,6 @@ final class HomePageSettingsStore: SettingsStoreBase {
 
     @StoredDefault(key: GeneralSettingsStorage.Keys.homePageIndicatorSize, defaultValue: .medium)
     var homePageIndicatorSize: HomePageIndicatorSize
-
-    @StoredDefault(key: GeneralSettingsStorage.Keys.homePageScrollAxis, defaultValue: .horizontal)
-    var homePageScrollAxis: HomePageScrollAxis
 
     @Published var homePageOrder: [HomePages] {
         didSet {
@@ -42,7 +38,6 @@ final class HomePageSettingsStore: SettingsStoreBase {
         homePageDisabled = Set<HomePages>()
         isHomePagePageIndicatorEnabled = true
         homePageIndicatorSize = .medium
-        homePageScrollAxis = .horizontal
     }
 
     override init(defaults: UserDefaults) {

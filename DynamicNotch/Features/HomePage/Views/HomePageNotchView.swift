@@ -90,14 +90,10 @@ struct HomePageNotchView: View {
         let activePages = settings.homePageOrder.filter { !settings.homePageDisabled.contains($0) }
         let settled = isPageSettled
         
-        VStack() {
-            if settings.homePageScrollAxis != .vertical {
-                Spacer()
-            }
-
-            ScrollView(settings.homePageScrollAxis == .vertical ? .vertical : .horizontal, showsIndicators: false) {
-                if settings.homePageScrollAxis == .vertical {
-                    LazyVStack(spacing: 20) {
+        VStack {
+            ScrollViewReader { proxy in
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 20) {
                         ForEach(activePages) { page in
                             pageView(for: page)
                                 .containerRelativeFrame(.vertical)
@@ -110,63 +106,57 @@ struct HomePageNotchView: View {
                         }
                     }
                     .scrollTargetLayout()
-                    
-                } else {
-                    LazyHStack(spacing: 20) {
-                        ForEach(activePages) { page in
-                            pageView(for: page)
-                                .containerRelativeFrame(.horizontal)
-                                .scrollTransition(.interactive) { content, phase in
-                                    content
-                                        .blur(radius: settled ? min(20, CGFloat(abs(phase.value)) * 150) : 20)
-                                        .opacity(settled ? max(0.7, 1.0 - (abs(phase.value) * 2.0)) : 0.7)
-                                }
-                                .id(page)
+                }
+                .scrollTargetBehavior(.viewAligned)
+                .scrollPosition(id: $currentPage, anchor: .top)
+                .onAppear {
+                    let targetPage = activePages.contains(initialPage) ? initialPage : (activePages.first ?? .camera)
+                    currentPage = targetPage
+                    proxy.scrollTo(targetPage, anchor: .top)
+
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                        proxy.scrollTo(targetPage, anchor: .top)
+                    }
+                }
+                .onChange(of: notchViewModel.presentedNotchSize.height) { _, _ in
+                    if let current = currentPage {
+                        proxy.scrollTo(current, anchor: .top)
+                    }
+                }
+                .onChange(of: initialPage) { _, newPage in
+                    if newPage != currentPage && activePages.contains(newPage) {
+                        currentPage = newPage
+                        withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
+                            proxy.scrollTo(newPage, anchor: .top)
                         }
                     }
-                    .scrollTargetLayout()
                 }
             }
-            .scrollTargetBehavior(.viewAligned)
-            .scrollPosition(id: $currentPage)
             .mask {
-                if settings.homePageScrollAxis == .vertical {
-                    let totalHeight = notchViewModel.presentedNotchSize.height
+                if !isNotchlessScreen && !notchViewModel.isDynamicIsland {
                     let baseHeight = notchViewModel.notchModel.baseHeight
-                    let cornerRadius: CGFloat = 20
+                    let cornerRadius: CGFloat = 30
                     
-                    if totalHeight > 0 {
-                        let fadeStart = baseHeight / totalHeight
-                        let fadeEnd = min(1.0, (baseHeight + 4) / totalHeight)
-                        
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                            .mask(
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .mask(
+                            VStack(spacing: 0) {
+                                Color.clear
+                                    .frame(height: baseHeight)
                                 LinearGradient(
                                     stops: [
                                         .init(color: .clear, location: 0),
-                                        .init(color: .clear, location: fadeStart),
-                                        .init(color: .black, location: fadeEnd),
                                         .init(color: .black, location: 1)
                                     ],
                                     startPoint: .top,
                                     endPoint: .bottom
                                 )
-                            )
-                    } else {
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                    }
+                                .frame(height: 4)
+                                Color.black
+                            }
+                        )
                 } else {
                     Color.black
                 }
-            }
-        }
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .padding(.horizontal, isNotchlessScreen ? 8 : 33)
-        .padding(.bottom, isNotchlessScreen ? 9 : 10)
-        .contentShape(Rectangle())
-        .onChange(of: initialPage) { _, newPage in
-            if newPage != currentPage && activePages.contains(newPage) {
-                currentPage = newPage
             }
         }
         .onChange(of: activePages) { _, newActivePages in
@@ -177,7 +167,7 @@ struct HomePageNotchView: View {
             }
         }
         .onChange(of: currentPage) { oldPage, newPage in
-            guard let newPage = newPage, newPage != oldPage else { return }
+            guard let oldPage = oldPage, let newPage = newPage, newPage != oldPage else { return }
             
             withAnimation(.easeInOut(duration: 0.15)) {
                 isWaitingForSizeUpdate = true
@@ -211,7 +201,7 @@ struct HomePageNotchView: View {
                         )
                     )
                 )
-
+                
                 withAnimation(.easeInOut(duration: 0.35)) {
                     isWaitingForSizeUpdate = false
                 }

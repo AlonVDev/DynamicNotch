@@ -8,18 +8,30 @@
 import SwiftUI
 
 struct SoftwareUpdateNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
-    let id = NotchContentRegistry.Settings.softwareUpdate.id
-    let settingsViewModel: SettingsViewModel
+    let id = NotchContentRegistry.SoftwareUpdate.update.id
+    let settingsViewModel: SettingsViewModel?
     
-    var priority: Int { NotchContentRegistry.Settings.softwareUpdate.priority }
+    var priority: Int { NotchContentRegistry.SoftwareUpdate.update.priority }
     var isExpandable: Bool { true }
+
+    init(settingsViewModel: SettingsViewModel? = nil) {
+        self.settingsViewModel = settingsViewModel
+    }
     
     func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         return .init(width: baseWidth + 70, height: baseHeight)
     }
+
+    func dynamicIslandSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+        .init(width: baseWidth + 60, height: baseHeight)
+    }
     
     func expandedSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         .init(width: baseWidth + 120, height: baseHeight + 65)
+    }
+
+    func expandedDynamicIslandSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+        .init(width: baseWidth + 180, height: baseHeight + 60)
     }
     
     func expandedCornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {

@@ -154,9 +154,7 @@ private struct NowPlayingAppearancePreview: View {
     private let baseColor = Color(red: 0.96, green: 0.48, blue: 0.2)
     
     var body: some View {
-        let appearance = settings.resolvedNowPlayingAppearanceOptions(
-            isDefaultActivityStrokeEnabled: applicationSettings.isDefaultActivityStrokeEnabled
-        )
+        let appearance = settings.nowPlayingAppearanceOptions
         let previewEqualizerHeights: [CGFloat] = [8, 6, 9, 5, 9]
         let showsNotchStroke = applicationSettings.isShowNotchStrokeEnabled
         let progressGradient = LinearGradient(

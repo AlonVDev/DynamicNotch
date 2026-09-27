@@ -34,7 +34,7 @@ struct NotchAnimations {
         let hideShowDelay: Double = 0.32
         
         return Self(
-            contentUpdate: .spring(response: baseResponse, dampingFraction: damping, blendDuration: blend),
+            contentUpdate: .spring(response: baseResponse, blendDuration: blend),
             contentHide: .spring(response: baseResponse, dampingFraction: damping, blendDuration: blend),
             contentShow: .spring(response: baseResponse, dampingFraction: damping, blendDuration: blend),
             openContentTransition: .spring(response: baseResponse, dampingFraction: damping, blendDuration: blend),

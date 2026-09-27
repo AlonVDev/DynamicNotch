@@ -8,9 +8,6 @@ final class ScreenRecordingSettingsStore: SettingsStoreBase {
     @StoredDefault(key: GeneralSettingsStorage.Keys.screenRecordingLiveActivityEnabled, defaultValue: true)
     var isScreenRecordingLiveActivityEnabled: Bool
 
-    @StoredDefault(key: GeneralSettingsStorage.Keys.screenRecordingDefaultStrokeEnabled, defaultValue: false)
-    var isScreenRecordingDefaultStrokeEnabled: Bool
-
     @StoredDefault(key: GeneralSettingsStorage.Keys.screenRecordingStyle, defaultValue: .detailed)
     var screenRecordingStyle: ScreenRecordingStyle
 
@@ -42,7 +39,6 @@ final class ScreenRecordingSettingsStore: SettingsStoreBase {
 
     func reset() {
         isScreenRecordingLiveActivityEnabled = defaultBool(for: GeneralSettingsStorage.Keys.screenRecordingLiveActivityEnabled)
-        isScreenRecordingDefaultStrokeEnabled = defaultBool(for: GeneralSettingsStorage.Keys.screenRecordingDefaultStrokeEnabled)
         screenRecordingStyle = .detailed
         isScreenshotActivityEnabled = defaultBool(for: GeneralSettingsStorage.Keys.screenshotActivityEnabled)
         isScreenshotDisableSystemThumbnailEnabled = defaultBool(for: GeneralSettingsStorage.Keys.screenshotDisableSystemThumbnail)

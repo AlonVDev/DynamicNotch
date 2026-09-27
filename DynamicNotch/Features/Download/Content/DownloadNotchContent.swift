@@ -23,9 +23,7 @@ struct DownloadNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
     
     var strokeColor: Color {
-        settingsViewModel.isDefaultActivityStrokeEnabled ?
-        .white.opacity(0.2) :
-        .accentColor.opacity(0.30)
+        .accentColor.opacity(0.3)
     }
     
     private var indicatorStyle: DownloadProgressIndicatorStyle {
@@ -39,6 +37,10 @@ struct DownloadNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     
     func expandedSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         .init(width: baseWidth + 150, height: baseHeight + 65)
+    }
+    
+    func expandedDynamicIslandSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+        .init(width: baseWidth + 200, height: baseHeight + 55)
     }
     
     func expandedCornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {

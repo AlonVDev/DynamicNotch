@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AirDropNotchView: View {
     @ObservedObject var airDropViewModel: AirDropNotchViewModel
+    @Environment(\.isNotchlessScreen) private var isNotchlessScreen
 
     private var isTargeted: Bool {
         airDropViewModel.targetedDropTarget == .airDrop
@@ -21,8 +22,8 @@ struct AirDropNotchView: View {
             AirDropDropZoneContent(isTargeted: isTargeted)
                 .frame(maxWidth: .infinity, maxHeight: AirDropDropZoneMetrics.height)
         }
-        .padding(.horizontal, AirDropDropZoneMetrics.horizontalPadding)
-        .padding(.vertical, AirDropDropZoneMetrics.verticalPadding)
+        .padding(.horizontal, isNotchlessScreen ? 10 : AirDropDropZoneMetrics.horizontalPadding)
+        .padding(.vertical, isNotchlessScreen ? 10 : AirDropDropZoneMetrics.verticalPadding)
     }
 }
 

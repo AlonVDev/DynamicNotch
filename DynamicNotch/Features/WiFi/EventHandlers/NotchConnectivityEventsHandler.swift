@@ -41,17 +41,6 @@ final class NotchConnectivityEventsHandler {
 
     func handleWifi(_ event: WifiEvent) {
         switch event {
-        case .wifiConnected:
-            guard settingsViewModel.isTemporaryActivityEnabled(.wifi) else { return }
-            notchViewModel.send(
-                .showTemporaryNotification(
-                    WifiConnectedNotchContent(
-                        wifiViewModel: wifiViewModel
-                    ),
-                    duration: settingsViewModel.temporaryActivityDuration(for: .wifi)
-                )
-            )
-
         case .noInternetConnection:
             guard settingsViewModel.connectivity.isNoInternetTemporaryActivityEnabled else { return }
             notchViewModel.send(

@@ -5,7 +5,6 @@ extension NowPlayingProgressTintStyle: StoredSettingValue {}
 extension NowPlayingSourceFilter: StoredSettingValue {}
 extension DownloadProgressIndicatorStyle: StoredSettingValue {}
 extension FileTrayUsageMode: StoredSettingValue {}
-extension FileTrayScrollDirection: StoredSettingValue {}
 extension DragAndDropActivityMode: StoredSettingValue {}
 extension TimerSound: StoredSettingValue {}
 
@@ -42,9 +41,6 @@ final class MediaAndFilesSettingsStore: SettingsStoreBase {
     @StoredDefault(key: GeneralSettingsStorage.Keys.downloadsLiveActivityEnabled, defaultValue: true)
     var isDownloadsLiveActivityEnabled: Bool
 
-    @StoredDefault(key: GeneralSettingsStorage.Keys.downloadsDefaultStrokeEnabled, defaultValue: false)
-    var isDownloadsDefaultStrokeEnabled: Bool
-
     @StoredDefault(key: GeneralSettingsStorage.Keys.downloadsProgressIndicatorStyle, defaultValue: .percent)
     var downloadsProgressIndicatorStyle: DownloadProgressIndicatorStyle
 
@@ -54,17 +50,11 @@ final class MediaAndFilesSettingsStore: SettingsStoreBase {
     @StoredDefault(key: GeneralSettingsStorage.Keys.airDropLiveActivityEnabled, defaultValue: true)
     var isAirDropLiveActivityEnabled: Bool
 
-    @StoredDefault(key: GeneralSettingsStorage.Keys.airDropDefaultStrokeEnabled, defaultValue: false)
-    var isDragAndDropDefaultStrokeEnabled: Bool
-
     @StoredDefault(key: GeneralSettingsStorage.Keys.trayLiveActivityEnabled, defaultValue: true)
     var isTrayLiveActivityEnabled: Bool
 
     @StoredDefault(key: GeneralSettingsStorage.Keys.fileTrayUsageMode, defaultValue: .copy)
     var fileTrayUsageMode: FileTrayUsageMode
-
-    @StoredDefault(key: GeneralSettingsStorage.Keys.fileTrayScrollDirection, defaultValue: .horizontal)
-    var fileTrayScrollDirection: FileTrayScrollDirection
 
     @StoredDefault(key: GeneralSettingsStorage.Keys.fileTrayRemoveButtonHidden, defaultValue: false)
     var isFileTrayRemoveButtonHidden: Bool
@@ -74,9 +64,6 @@ final class MediaAndFilesSettingsStore: SettingsStoreBase {
 
     @StoredDefault(key: GeneralSettingsStorage.Keys.timerLiveActivityEnabled, defaultValue: true)
     var isTimerLiveActivityEnabled: Bool
-
-    @StoredDefault(key: GeneralSettingsStorage.Keys.timerDefaultStrokeEnabled, defaultValue: false)
-    var isTimerDefaultStrokeEnabled: Bool
 
     @StoredDefault(key: GeneralSettingsStorage.Keys.timerSoundEnabled, defaultValue: true)
     var isTimerSoundEnabled: Bool
@@ -114,14 +101,12 @@ final class MediaAndFilesSettingsStore: SettingsStoreBase {
 
     func resetDownloads() {
         isDownloadsLiveActivityEnabled = defaultBool(for: GeneralSettingsStorage.Keys.downloadsLiveActivityEnabled)
-        isDownloadsDefaultStrokeEnabled = defaultBool(for: GeneralSettingsStorage.Keys.downloadsDefaultStrokeEnabled)
         downloadsProgressIndicatorStyle = .percent
     }
 
     func resetDragAndDrop() {
         isDragAndDropLiveActivityEnabled = defaultBool(for: GeneralSettingsStorage.Keys.dragAndDropLiveActivityEnabled)
         isAirDropLiveActivityEnabled = defaultBool(for: GeneralSettingsStorage.Keys.airDropLiveActivityEnabled)
-        isDragAndDropDefaultStrokeEnabled = defaultBool(for: GeneralSettingsStorage.Keys.airDropDefaultStrokeEnabled)
         dragAndDropActivityMode = .airDrop
         resetFileTray()
     }
@@ -129,13 +114,11 @@ final class MediaAndFilesSettingsStore: SettingsStoreBase {
     func resetFileTray() {
         isTrayLiveActivityEnabled = defaultBool(for: GeneralSettingsStorage.Keys.trayLiveActivityEnabled)
         fileTrayUsageMode = .copy
-        fileTrayScrollDirection = .horizontal
         isFileTrayRemoveButtonHidden = defaultBool(for: GeneralSettingsStorage.Keys.fileTrayRemoveButtonHidden)
     }
 
     func resetTimer() {
         isTimerLiveActivityEnabled = defaultBool(for: GeneralSettingsStorage.Keys.timerLiveActivityEnabled)
-        isTimerDefaultStrokeEnabled = defaultBool(for: GeneralSettingsStorage.Keys.timerDefaultStrokeEnabled)
         isTimerSoundEnabled = defaultBool(for: GeneralSettingsStorage.Keys.timerSoundEnabled)
         timerSound = .apex
     }
@@ -150,12 +133,6 @@ struct NowPlayingAppearanceOptions {
 
 extension MediaAndFilesSettingsStore {
     var nowPlayingAppearanceOptions: NowPlayingAppearanceOptions {
-        resolvedNowPlayingAppearanceOptions(isDefaultActivityStrokeEnabled: false)
-    }
-
-    func resolvedNowPlayingAppearanceOptions(
-        isDefaultActivityStrokeEnabled: Bool = false
-    ) -> NowPlayingAppearanceOptions {
         .init(
             showsFavoriteButton: isNowPlayingFavoriteButtonVisible,
             showsOutputDeviceButton: isNowPlayingOutputDeviceButtonVisible,

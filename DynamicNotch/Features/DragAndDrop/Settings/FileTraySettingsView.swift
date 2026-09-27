@@ -32,18 +32,6 @@ struct FileTraySettingsView: View {
                 .opacity(0.6)
 
             SettingsMenuRow(
-                title: "settings.drop.scrollDirection.title",
-                description: "settings.drop.scrollDirection.desc",
-                options: Array(FileTrayScrollDirection.allCases),
-                optionTitle: { $0.title },
-                accessibilityIdentifier: "settings.activities.live.drop.trayScrollDirection",
-                selection: $mediaSettings.fileTrayScrollDirection
-            )
-
-            Divider()
-                .opacity(0.6)
-
-            SettingsMenuRow(
                 title: "settings.drop.trayUsage.title",
                 description: "settings.drop.trayUsage.desc",
                 options: Array(FileTrayUsageMode.allCases),

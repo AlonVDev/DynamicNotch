@@ -28,7 +28,7 @@ final class WifiViewModelIntegrationTests: XCTestCase {
 
         viewModel.wifiEvent = nil
         monitor.send(wifi: true, hotspot: false, vpn: false)
-        XCTAssertEqual(viewModel.wifiEvent, .wifiConnected)
+        XCTAssertNil(viewModel.wifiEvent)
 
         viewModel.wifiEvent = nil
         monitor.send(wifi: false, hotspot: true, vpn: false)
@@ -39,7 +39,7 @@ final class WifiViewModelIntegrationTests: XCTestCase {
         XCTAssertEqual(viewModel.wifiEvent, .hotspotHide)
     }
 
-    func testSwitchingFromHotspotToWifiProducesHotspotHideThenWifiConnected() async {
+    func testSwitchingFromHotspotToWifiProducesHotspotHide() async {
         let monitor = FakeWifiMonitor()
         let viewModel = makeViewModel(monitor: monitor)
 
@@ -55,9 +55,6 @@ final class WifiViewModelIntegrationTests: XCTestCase {
         XCTAssertFalse(viewModel.hotspotActive)
         XCTAssertTrue(viewModel.wifiConnected)
         XCTAssertEqual(viewModel.wifiName, "Home Wi-Fi")
-
-        try? await Task.sleep(nanoseconds: 500_000_000)
-        XCTAssertEqual(viewModel.wifiEvent, .wifiConnected)
     }
 
     func testConnectedNetworkNamesAreUpdatedFromMonitor() {

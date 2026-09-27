@@ -20,9 +20,9 @@ struct TimerFinishedNotchView: View {
             Spacer()
             content
         }
-        .padding(.leading, isNotchlessScreen ? 18 : 38)
-        .padding(.trailing, isNotchlessScreen ? 14 : 32)
-        .padding(.bottom, isNotchlessScreen ? 14 : 12)
+        .padding(.leading, isNotchlessScreen ? 20 : 38)
+        .padding(.trailing, isNotchlessScreen ? 15 : 32)
+        .padding(.bottom, isNotchlessScreen ? 15 : 12)
         .onDisappear {
             TimerSoundPlayer.shared.stop()
         }

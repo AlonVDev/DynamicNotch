@@ -25,10 +25,6 @@ struct HUDSettingsView: View {
         Double(SettingsStoreBase.temporaryActivityDurationRange.lowerBound)...Double(SettingsStoreBase.temporaryActivityDurationRange.upperBound)
     }
 
-    private var isLevelStrokeLocked: Bool {
-        applicationSettings.isDefaultActivityStrokeEnabled
-    }
-
     var body: some View {
         SettingsPageScrollView {
             hudActivity
@@ -204,8 +200,6 @@ struct HUDSettingsView: View {
                 isOn: $settings.isColoredLevelStrokeEnabled,
                 accessibilityIdentifier: "settings.general.hud.coloredStroke"
             )
-            .disabled(isLevelStrokeLocked)
-            .opacity(isLevelStrokeLocked ? 0.5 : 1)
             
             Divider().opacity(0.6)
             
@@ -400,7 +394,7 @@ struct HUDSettingsView: View {
         }
 
         return HudLevelStyling.previewStrokeTint(
-            isEnabled: settings.isColoredLevelStrokeEnabled && !isLevelStrokeLocked
+            isEnabled: settings.isColoredLevelStrokeEnabled
         )
     }
 }

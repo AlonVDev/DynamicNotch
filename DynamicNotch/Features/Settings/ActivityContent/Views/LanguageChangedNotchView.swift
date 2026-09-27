@@ -34,12 +34,11 @@ struct LanguageChangedNotchView: View {
             Spacer()
             
             Text(verbatim: language.nativeDisplayName)
-                .font(.system(size: 14))
+                .font(.system(size: isNotchlessScreen ? 13 : 14))
                 .foregroundColor(.white)
                 .lineLimit(1)
         }
         .padding(.leading, isNotchlessScreen ? 6.scaled(by: scale) : 15.scaled(by: scale))
         .padding(.trailing, isNotchlessScreen ? 8.scaled(by: scale) : 15.scaled(by: scale))
-        .padding(.vertical, 10)
     }
 }

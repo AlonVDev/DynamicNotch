@@ -10,7 +10,6 @@ import Combine
 import SwiftUI
 
 enum WifiEvent: Equatable {
-    case wifiConnected
     case hotspotActive
     case hotspotHide
     case noInternetConnection
@@ -65,12 +64,6 @@ final class WifiViewModel: ObservableObject {
             if !self.isInitialCheck {
                 var pendingEvents: [WifiEvent] = []
                 
-                if self.shouldEmitConnectionNotification(
-                    isConnected: wifi && !hotspot,
-                    wasConnected: self.wifiConnected
-                ) {
-                    pendingEvents.append(.wifiConnected)
-                }
                 if hotspot && !self.hotspotActive {
                     pendingEvents.append(.hotspotActive)
                 }
@@ -112,13 +105,6 @@ final class WifiViewModel: ObservableObject {
             self.hotspotBatteryLevel = level
         }
         monitor.startMonitoring()
-    }
-
-    private func shouldEmitConnectionNotification(
-        isConnected: Bool,
-        wasConnected: Bool
-    ) -> Bool {
-        isConnected && !wasConnected
     }
 }
 

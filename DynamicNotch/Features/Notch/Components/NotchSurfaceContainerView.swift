@@ -9,6 +9,19 @@ struct NotchSurfaceContainerView: View {
             .overlay {
                 contentOverlayWrapped
             }
+            .overlay(alignment: .top) {
+                if notchViewModel.isDynamicIsland,
+                   notchViewModel.notchModel.baseWidth > 0,
+                   notchViewModel.notchModel.baseHeight > 0 {
+                    DynamicIslandShape(cornerRadius: notchViewModel.notchModel.baseHeight * 0.5)
+                        .fill(.black)
+                        .frame(
+                            width: notchViewModel.notchModel.baseWidth,
+                            height: notchViewModel.notchModel.baseHeight
+                        )
+                        .allowsHitTesting(false)
+                }
+            }
     }
     
     @ViewBuilder
@@ -22,6 +35,7 @@ struct NotchSurfaceContainerView: View {
             dynamicIslandCornerRadius: notchViewModel.dynamicIslandCornerRadius,
             strokeColor: shouldShowStroke ? visibleStrokeColor : .clear,
             height: notchViewModel.interactiveNotchSize.height,
+            baseWidth: notchViewModel.notchModel.baseWidth,
             baseHeight: notchViewModel.notchModel.baseHeight
         )
         .scaleEffect(
@@ -127,14 +141,7 @@ struct NotchSurfaceContainerView: View {
 
     private var visibleStrokeColor: Color {
         let strokeOpacity = settingsViewModel.application.notchStrokeOpacity
-        let isDefaultStroke = settingsViewModel.application.isDefaultActivityStrokeEnabled
-        
-        let baseColor: Color
-        if isDefaultStroke {
-            baseColor = .white.opacity(0.2)
-        } else {
-            baseColor = notchViewModel.displayedContent?.strokeColor ?? notchViewModel.cachedStrokeColor
-        }
+        let baseColor = notchViewModel.displayedContent?.strokeColor ?? notchViewModel.cachedStrokeColor
         return baseColor.opacity(strokeOpacity)
     }
     

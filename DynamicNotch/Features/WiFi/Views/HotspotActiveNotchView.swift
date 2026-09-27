@@ -48,8 +48,8 @@ struct HotspotActiveNotchView: View {
                 batteryView
             }
         }
-        .font(.system(size: 14))
-        .padding(.leading, isNotchlessScreen ? 4.scaled(by: scale) : 14.scaled(by: scale))
+        .font(.system(size: isNotchlessScreen ? 13 : 14))
+        .padding(.leading, isNotchlessScreen ? 5.scaled(by: scale) : 14.scaled(by: scale))
         .padding(.trailing, isNotchlessScreen ? 6.scaled(by: scale) : 14.scaled(by: scale))
     }
     
@@ -72,7 +72,6 @@ struct HotspotActiveNotchView: View {
             Spacer()
             
             Text(verbatim: "On")
-                .font(.system(size: 14))
                 .foregroundStyle(.green)
         }
     }
@@ -86,7 +85,6 @@ struct HotspotActiveNotchView: View {
             Spacer()
             
             Text("\(displayBatteryLevel)%")
-                .font(.system(size: 14))
                 .foregroundStyle(tint(for: displayBatteryLevel).gradient)
         }
     }

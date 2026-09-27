@@ -329,16 +329,6 @@ struct DebugSettingsView: View {
         debugDivider
 
         DebugActionRow(
-            title: "Wi-Fi Connected",
-            description: "Shows the Wi-Fi temporary notification.",
-            systemImage: "wifi",
-            color: .blue,
-            action: viewModel.triggerWifiPreview
-        )
-
-        debugDivider
-
-        DebugActionRow(
             title: "No Internet Connection",
             description: "Show the offline temporary notification with its actions.",
             systemImage: "wifi.slash",

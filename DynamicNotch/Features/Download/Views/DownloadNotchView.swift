@@ -17,15 +17,15 @@ struct DownloadNotchView: View {
     var body: some View {
         HStack {
             if let url = download?.url {
-                DownloadFileThumbnailView(url: url, size: isNotchlessScreen ? 15 : 25)
+                DownloadFileThumbnailView(url: url, size: isNotchlessScreen ? 18 : 25)
             } else {
                 Image(systemName: "document.fill")
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(.white)
             }
-
+            
             Spacer()
-
+            
             if settings.downloadsProgressIndicatorStyle == .circle {
                 DownloadProgressIndicatorView(
                     progress: download?.progress ?? 0.08,
@@ -48,9 +48,9 @@ struct DownloadNotchView: View {
                 )
             }
         }
-
+        
         .padding(.leading, isNotchlessScreen ? 6.scaled(by: scale) : 12.scaled(by: scale))
-        .padding(.trailing, isNotchlessScreen ? 4.scaled(by: scale) : 14.scaled(by: scale))
+        .padding(.trailing, isNotchlessScreen ? trailingPadding.scaled(by: scale) : 14.scaled(by: scale))
     }
     
     private static let byteCountFormatter: ByteCountFormatter = {
@@ -65,8 +65,17 @@ struct DownloadNotchView: View {
     private var download: DownloadModel? {
         downloadViewModel.primaryDownload
     }
-
+    
     private var indicatorStyle: DownloadProgressIndicatorStyle {
         settings.downloadsProgressIndicatorStyle
+    }
+    
+    private var trailingPadding: CGFloat {
+        switch settings.downloadsProgressIndicatorStyle {
+        case .percent:
+            6
+        case .circle:
+            4
+        }
     }
 }

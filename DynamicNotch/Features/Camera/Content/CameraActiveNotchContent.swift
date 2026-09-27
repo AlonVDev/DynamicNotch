@@ -2,7 +2,6 @@ import SwiftUI
 
 struct CameraActiveNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     let id = NotchContentRegistry.HomePage.active.id
-    
     var priority: Int { NotchContentRegistry.HomePage.active.priority }
     var isExpandable: Bool { true }
     
@@ -11,8 +10,7 @@ struct CameraActiveNotchContent: NotchContentProtocol, DynamicIslandCustomizable
     }
     
     func expandedCornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
-        let isStarted = UserDefaults.standard.bool(forKey: "isCameraStarted")
-        return (top: isStarted ? 34 : 24, bottom: isStarted ? 48 : 48)
+        (top: 34, bottom: 48)
     }
     
     func expandedSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
@@ -29,13 +27,12 @@ struct CameraActiveNotchContent: NotchContentProtocol, DynamicIslandCustomizable
         }
     }
 
-    
     func expandedDynamicIslandCornerRadius(baseHeight: CGFloat) -> CGFloat {
         let isStarted = UserDefaults.standard.bool(forKey: "isCameraStarted")
         let isLarge = UserDefaults.standard.bool(forKey: "isCameraLarge")
         
         if !isStarted {
-            return baseHeight * 0.2
+            return baseHeight * 0.25
         }
         if isLarge {
             return baseHeight * 0.15

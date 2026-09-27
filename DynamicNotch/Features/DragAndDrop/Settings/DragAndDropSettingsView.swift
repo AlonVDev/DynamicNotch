@@ -122,13 +122,7 @@ struct DragAndDropSettingsView: View {
             return .clear
         }
 
-        let baseColor: Color
-        if appearanceSettings.isDefaultActivityStrokeEnabled {
-            baseColor = .white.opacity(0.2)
-        } else {
-            baseColor = dragAndDropPreviewBaseStrokeColor
-        }
-        return baseColor.opacity(appearanceSettings.notchStrokeOpacity)
+        return dragAndDropPreviewBaseStrokeColor.opacity(appearanceSettings.notchStrokeOpacity)
     }
 
     private var dragAndDropPreviewBaseStrokeColor: Color {

@@ -7,8 +7,8 @@ struct ScreenshotFlyAnimationView: View {
     
     var body: some View {
         GeometryReader { proxy in
-            let targetWidth = max(1, proxy.size.width - 70)
-            let targetHeight = max(1, proxy.size.height - 70)
+            let targetWidth = max(1, proxy.size.width <= 70 ? proxy.size.width : proxy.size.width - 70)
+            let targetHeight = max(1, proxy.size.height <= 70 ? proxy.size.height : proxy.size.height - 70)
             
             Image(nsImage: image)
                 .resizable()
@@ -74,13 +74,16 @@ final class ScreenshotFlyAnimationService {
         let initialY = max(screenFrame.minY + 20, min(rawY, screenFrame.maxY - initialHeight - 20))
         let startFrame = NSRect(x: initialX, y: initialY, width: initialWidth, height: initialHeight)
         
-        let middleWidth: CGFloat = 250
+        let isNotchless = targetScreen.isNotchless
+        let widthOffset: CGFloat = isNotchless ? -60 : 0
+        
+        let middleWidth: CGFloat = 250 + widthOffset
         let middleHeight: CGFloat = 450
         let middleX = screenFrame.midX - (middleWidth / 2)
         let middleY = screenFrame.maxY - (middleHeight + 30)
         let middleFrame = NSRect(x: middleX, y: middleY, width: middleWidth, height: middleHeight)
         
-        let finalWidth: CGFloat = 250
+        let finalWidth: CGFloat = 250 + widthOffset
         let finalHeight: CGFloat = 30
         let finalX = screenFrame.midX - (finalWidth / 2)
         let finalY = screenFrame.maxY + 15

@@ -93,19 +93,13 @@ extension AppDelegate {
         let notchSize = notchViewModel.notchModel.size
         guard notchSize.width > 0, notchSize.height > 0 else { return nil }
 
-        let isVertical = settingsViewModel.homePage.homePageScrollAxis == .vertical
-        
         var height = notchSize.height
         var width = notchSize.width
         let originX = floor(window.frame.midX - notchSize.width / 2)
 
         if shouldShowPageIndicator {
-            if isVertical {
-                width = notchSize.width + pageIndicatorSize.width + 16
-                height = max(notchSize.height, notchSize.height / 2 + pageIndicatorSize.height / 2 + 12)
-            } else {
-                height += 6 + pageIndicatorSize.height + 35
-            }
+            width = notchSize.width + pageIndicatorSize.width + 48
+            height = max(notchSize.height, notchSize.height / 2 + pageIndicatorSize.height / 2 + 12)
         }
 
         let origin = CGPoint(
@@ -138,14 +132,8 @@ extension AppDelegate {
         let count = CGFloat(active.count)
         if count == 0 { return .zero }
         
-        if settingsViewModel.homePage.homePageScrollAxis == .vertical {
-            let width = size.dotSize + 2 * size.padding
-            let height = count * (size.dotSize + size.spacing) + 2 * size.padding
-            return CGSize(width: width, height: height)
-        } else {
-            let width = count * (size.dotSize + size.spacing) + 2 * size.padding
-            let height = size.dotSize + 2 * size.padding
-            return CGSize(width: width, height: height)
-        }
+        let width = size.dotSize + 2 * size.padding
+        let height = count * (size.dotSize + size.spacing) + 2 * size.padding
+        return CGSize(width: width, height: height)
     }
 }

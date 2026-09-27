@@ -30,10 +30,10 @@ struct NotchView: View {
             .onChange(of: notchViewModel.displayedContent?.id) {
                 notchViewModel.handleStrokeVisibility()
             }
-            .onChange(of: settingsViewModel.notchWidth) {
+            .onChange(of: settingsViewModel.application.notchWidth) { _, _ in
                 notchViewModel.updateDimensions()
             }
-            .onChange(of: settingsViewModel.notchHeight) {
+            .onChange(of: settingsViewModel.application.notchHeight) { _, _ in
                 notchViewModel.updateDimensions()
             }
             
@@ -41,6 +41,7 @@ struct NotchView: View {
                 notchViewModel: notchViewModel,
                 settingsViewModel: settingsViewModel
             )
+            .environment(\.isNotchlessScreen, notchViewModel.isDynamicIsland)
             .transition(
                 notchViewModel.contentTransition(
                     notchWidth: notchViewModel.presentedNotchSize.width,
@@ -50,7 +51,7 @@ struct NotchView: View {
                     isExpandedPresentation: notchViewModel.isDisplayingExpandedLiveActivity
                 )
             )
-            .zIndex(settingsViewModel.homePage.homePageScrollAxis == .vertical ? 1.0 : -1.0)
+            .zIndex(1.0)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }

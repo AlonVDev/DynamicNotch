@@ -70,10 +70,17 @@ final class NotchEngine: ObservableObject {
     }
 
     func updateBaseGeometry(width: CGFloat, height: CGFloat, scale: CGFloat, isDynamicIsland: Bool) {
+        guard notchModel.baseWidth != width ||
+              notchModel.baseHeight != height ||
+              notchModel.scale != scale ||
+              notchModel.isDynamicIsland != isDynamicIsland else {
+            return
+        }
         notchModel.baseWidth = width
         notchModel.baseHeight = height
         notchModel.scale = scale
         notchModel.isDynamicIsland = isDynamicIsland
+        notchModel.updateToken = UUID()
     }
 
     func send(_ notchState: NotchState) {

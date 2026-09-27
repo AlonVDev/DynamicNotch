@@ -68,6 +68,10 @@ struct NotchModel: Equatable {
     static func == (lhs: NotchModel, rhs: NotchModel) -> Bool {
         lhs.content?.id == rhs.content?.id &&
         lhs.isLiveActivityExpanded == rhs.isLiveActivityExpanded &&
+        lhs.baseWidth == rhs.baseWidth &&
+        lhs.baseHeight == rhs.baseHeight &&
+        lhs.scale == rhs.scale &&
+        lhs.isDynamicIsland == rhs.isDynamicIsland &&
         lhs.updateToken == rhs.updateToken
     }
 }

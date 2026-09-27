@@ -108,7 +108,7 @@ extension AnyTransition {
                     blur: 30,
                     opacity: 0,
                     offsetY: verticalOffset,
-                    scaleX: 0.4,
+                    scaleX: isNotchlessScreen ? 0.001 : 0.4,
                     scaleY: 0.2,
                     anchor: .center
                 ),

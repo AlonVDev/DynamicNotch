@@ -27,9 +27,6 @@ final class ConnectivitySettingsStore: SettingsStoreBase {
     @StoredDefault(key: GeneralSettingsStorage.Keys.focusAppearanceStyle, defaultValue: .iconsOnly)
     var focusAppearanceStyle: FocusAppearanceStyle
 
-    @StoredDefault(key: GeneralSettingsStorage.Keys.focusDefaultStrokeEnabled, defaultValue: false)
-    var isFocusDefaultStrokeEnabled: Bool
-
     @StoredDefault(key: GeneralSettingsStorage.Keys.bluetoothTemporaryActivityEnabled, defaultValue: true)
     var isBluetoothTemporaryActivityEnabled: Bool
 
@@ -48,16 +45,6 @@ final class ConnectivitySettingsStore: SettingsStoreBase {
 
     @StoredDefault(key: GeneralSettingsStorage.Keys.bluetoothBatteryIndicatorStyle, defaultValue: .percent)
     var bluetoothBatteryIndicatorStyle: BluetoothBatteryIndicatorStyle
-
-    @StoredDefault(key: GeneralSettingsStorage.Keys.wifiTemporaryActivityEnabled, defaultValue: true)
-    var isWifiTemporaryActivityEnabled: Bool
-
-    @StoredDefault(
-        key: GeneralSettingsStorage.Keys.wifiTemporaryActivityDuration,
-        defaultValue: 3,
-        transform: SettingsStoreBase.clampTemporaryActivityDuration
-    )
-    var wifiTemporaryActivityDuration: Int
 
     @StoredDefault(key: GeneralSettingsStorage.Keys.vpnTemporaryActivityEnabled, defaultValue: true)
     var isVpnTemporaryActivityEnabled: Bool
@@ -87,9 +74,6 @@ final class ConnectivitySettingsStore: SettingsStoreBase {
 
     @StoredDefault(key: GeneralSettingsStorage.Keys.hotspotAppearanceStyle, defaultValue: .minimal)
     var hotspotAppearanceStyle: HotspotAppearanceStyle
-
-    @StoredDefault(key: GeneralSettingsStorage.Keys.hotspotDefaultStrokeEnabled, defaultValue: false)
-    var isHotspotDefaultStrokeEnabled: Bool
 
     @StoredDefault(key: GeneralSettingsStorage.Keys.networkShowVPNTimer, defaultValue: true)
     var isVPNTimerVisible: Bool
@@ -121,11 +105,8 @@ final class ConnectivitySettingsStore: SettingsStoreBase {
 
     func resetWifi() {
         isHotspotLiveActivityEnabled = defaultBool(for: GeneralSettingsStorage.Keys.hotspotLiveActivityEnabled)
-        isWifiTemporaryActivityEnabled = defaultBool(for: GeneralSettingsStorage.Keys.wifiTemporaryActivityEnabled)
-        wifiTemporaryActivityDuration = defaultInt(for: GeneralSettingsStorage.Keys.wifiTemporaryActivityDuration)
         isNoInternetTemporaryActivityEnabled = defaultBool(for: GeneralSettingsStorage.Keys.noInternetTemporaryActivityEnabled)
         hotspotAppearanceStyle = .minimal
-        isHotspotDefaultStrokeEnabled = defaultBool(for: GeneralSettingsStorage.Keys.hotspotDefaultStrokeEnabled)
     }
 
     func resetVpn() {
@@ -143,7 +124,6 @@ final class ConnectivitySettingsStore: SettingsStoreBase {
         isFocusOnAutoHideEnabled = defaultBool(for: GeneralSettingsStorage.Keys.focusOnAutoHideEnabled)
         focusOnTemporaryActivityDuration = defaultInt(for: GeneralSettingsStorage.Keys.focusOnTemporaryActivityDuration)
         focusAppearanceStyle = .iconsOnly
-        isFocusDefaultStrokeEnabled = defaultBool(for: GeneralSettingsStorage.Keys.focusDefaultStrokeEnabled)
         isFocusOffTemporaryActivityEnabled = defaultBool(for: GeneralSettingsStorage.Keys.focusOffTemporaryActivityEnabled)
         focusOffTemporaryActivityDuration = defaultInt(for: GeneralSettingsStorage.Keys.focusOffTemporaryActivityDuration)
     }

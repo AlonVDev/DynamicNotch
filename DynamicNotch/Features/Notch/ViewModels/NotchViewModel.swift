@@ -290,11 +290,11 @@ final class NotchViewModel: ObservableObject {
             hideDelay: hideDelay,
             queueDelay: queueDelay
         )
-        updateDimensions()
+        updateDimensions(animated: false)
         bindEngine()
     }
 
-    func updateDimensions() {
+    func updateDimensions(animated: Bool = true) {
         guard let screenMetrics = screenMetricsProvider(settings) else {
             return
         }
@@ -311,28 +311,35 @@ final class NotchViewModel: ObservableObject {
         let heightOffset = CGFloat(settings.notchHeight)
         let baseHeightAdjustment: CGFloat = isDynamicIsland ? 1 : 0
         
+        let finalWidth: CGFloat
+        let finalHeight: CGFloat
+        
         if let notchSize = screenMetrics.notchSize {
             let baseWidth = notchSize.width + 14.scaled(by: widthScale) + widthOffset
-            let finalWidth = isDynamicIsland ? baseWidth * 0.85 : baseWidth
-            
-            engine.updateBaseGeometry(
-                width: finalWidth,
-                height: notchSize.height + heightOffset + baseHeightAdjustment,
-                scale: scale,
-                isDynamicIsland: isDynamicIsland
-            )
-            
+            finalWidth = isDynamicIsland ? baseWidth * 0.85 : baseWidth
+            finalHeight = notchSize.height + heightOffset + baseHeightAdjustment
         } else {
             let baseWidthValue: CGFloat = isDynamicIsland ? 120 : 190
             let baseWidth = (baseWidthValue * widthScale) + widthOffset
-            let finalWidth = isDynamicIsland ? baseWidth * 0.85 : baseWidth
-            
-            engine.updateBaseGeometry(
+            finalWidth = isDynamicIsland ? baseWidth * 0.85 : baseWidth
+            finalHeight = 26 + heightOffset + baseHeightAdjustment
+        }
+        
+        let applyGeometry = {
+            self.engine.updateBaseGeometry(
                 width: finalWidth,
-                height: 26 + heightOffset + baseHeightAdjustment,
+                height: finalHeight,
                 scale: scale,
                 isDynamicIsland: isDynamicIsland
             )
+        }
+        
+        if animated {
+            withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 0.85)) {
+                applyGeometry()
+            }
+        } else {
+            applyGeometry()
         }
     }
     

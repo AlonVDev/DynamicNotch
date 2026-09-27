@@ -21,15 +21,6 @@ struct TimerSettingsView: View {
                 isOn: $mediaSettings.isTimerLiveActivityEnabled,
                 accessibilityIdentifier: "settings.activities.live.timer"
             )
-
-            Divider().opacity(0.6)
-
-            SettingsStrokeToggleRow(
-                title: "settings.notch.defaultStrokeColor.title",
-                description: "settings.notch.defaultStrokeColor.desc",
-                isOn: $mediaSettings.isTimerDefaultStrokeEnabled,
-                accessibilityIdentifier: "settings.activities.live.timer.defaultStroke"
-            )
         }
     }
 

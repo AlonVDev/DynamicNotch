@@ -56,17 +56,6 @@ struct HomePageSettingsView: View {
             )
             .disabled(!homePageSettings.isHomePagePageIndicatorEnabled)
             .opacity(homePageSettings.isHomePagePageIndicatorEnabled ? 1.0 : 0.5)
-
-            Divider().opacity(0.6)
-            
-            SettingsMenuRow(
-                title: "settings.homePage.scrollAxis.title",
-                description: "settings.homePage.scrollAxis.description",
-                options: Array(HomePageScrollAxis.allCases),
-                optionTitle: { $0.title },
-                accessibilityIdentifier: "settings.homePage.scrollAxis",
-                selection: $homePageSettings.homePageScrollAxis
-            )
         }
     }
 
@@ -138,24 +127,11 @@ private struct HomePageAppearancePreview: View {
                 
                 if homePageSettings.isHomePagePageIndicatorEnabled {
                     let size = homePageSettings.homePageIndicatorSize
-                    let isVertical = homePageSettings.homePageScrollAxis == .vertical
-                    Group {
-                        if isVertical {
-                            VStack(spacing: size.spacing) {
-                                ForEach(0..<4, id: \.self) { index in
-                                    Circle()
-                                        .fill(index == 0 ? Color.white : Color.white.opacity(0.4))
-                                        .frame(width: size.dotSize, height: size.dotSize)
-                                }
-                            }
-                        } else {
-                            HStack(spacing: size.spacing) {
-                                ForEach(0..<4, id: \.self) { index in
-                                    Circle()
-                                        .fill(index == 0 ? Color.white : Color.white.opacity(0.4))
-                                        .frame(width: size.dotSize, height: size.dotSize)
-                                }
-                            }
+                    VStack(spacing: size.spacing) {
+                        ForEach(0..<4, id: \.self) { index in
+                            Circle()
+                                .fill(index == 0 ? Color.white : Color.white.opacity(0.4))
+                                .frame(width: size.dotSize, height: size.dotSize)
                         }
                     }
                     .padding(size.padding)
@@ -168,8 +144,8 @@ private struct HomePageAppearancePreview: View {
                                     : .clear, lineWidth: 1)
                     }
                     .offset(
-                        x: isVertical ? 126 : 0,
-                        y: isVertical ? 44 : 148
+                        x: 126,
+                        y: 44
                     )
                 }
             }
