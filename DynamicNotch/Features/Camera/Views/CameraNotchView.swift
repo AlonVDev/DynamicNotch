@@ -45,7 +45,7 @@ struct CameraNotchView: View {
                 }
             } else {
                 cameraStartView
-                    .padding(.horizontal, isNotchlessScreen ? 8 : 42)
+                    .padding(.horizontal, isNotchlessScreen ? 14 : 42)
             }
         }
         .padding(.bottom, 8)

@@ -91,13 +91,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             SparkleUpdater.shared.$isUpdateAvailable
                 .receive(on: RunLoop.main)
                 .sink { [weak self] isAvailable in
-                    guard let self else { return }
-                    if isAvailable {
-                        let content = SoftwareUpdateNotchContent(settingsViewModel: self.settingsViewModel)
-                        self.notchViewModel.send(.showLiveActivity(content))
-                    } else {
-                        self.notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.Settings.softwareUpdate.id))
-                    }
+                    self?.notchEventCoordinator.handleSoftwareUpdateEvent(isAvailable ? .updateAvailable : .upToDate)
                 }
                 .store(in: &cancellables)
         }

@@ -71,6 +71,13 @@ struct HudNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
         
         return .init(width: width, height: height)
     }
+    
+    func dynamicIslandSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+        let width = isStyleExpanded ? baseWidth + 100 : baseWidth + widthOffset
+        let height = isStyleExpanded ? baseHeight + heightOffset : baseHeight
+        
+        return .init(width: width, height: height)
+    }
 
     @MainActor
     func makeView() -> AnyView {

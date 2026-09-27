@@ -18,7 +18,7 @@ struct SoftwareUpdateNotchView: View {
                 .interpolation(.high)
                 .antialiased(true)
                 .scaledToFill()
-                .frame(width: isNotchlessScreen ? 18 : 24, height: isNotchlessScreen ? 18 : 24)
+                .frame(width: isNotchlessScreen ? 20 : 24, height: isNotchlessScreen ? 20 : 24)
                 .cornerRadius(6)
             
             Spacer()
@@ -27,7 +27,7 @@ struct SoftwareUpdateNotchView: View {
                 .font(.system(size: isNotchlessScreen ? 18 : 21, weight: .semibold))
                 .foregroundStyle(.blue)
         }
-        .padding(.leading, isNotchlessScreen ? 6.scaled(by: scale) : 13.scaled(by: scale))
+        .padding(.leading, isNotchlessScreen ? 5.scaled(by: scale) : 13.scaled(by: scale))
         .padding(.trailing, isNotchlessScreen ? 2.scaled(by: scale) : 11.scaled(by: scale))
     }
 }
@@ -50,11 +50,11 @@ struct SoftwareUpdateExpandedNotchView: View {
                     .cornerRadius(12)
                 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Update Available")
+                    Text(verbatim: "Update Available")
                         .font(.system(size: 14, weight: .medium))
                         .foregroundColor(.white)
                     
-                    Text("Version \(updater.latestVersionString)")
+                    Text(verbatim: "Version \(updater.latestVersionString)")
                         .font(.system(size: 14))
                         .foregroundColor(.white.opacity(0.6))
                 }

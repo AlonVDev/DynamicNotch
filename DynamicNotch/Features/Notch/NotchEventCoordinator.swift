@@ -31,6 +31,7 @@ final class NotchEventCoordinator: ObservableObject {
     private let screenRecordingHandler: NotchScreenRecordingEventsHandler
     private let lockScreenHandler: NotchLockScreenEventsHandler
     private let onboardingHandler: NotchOnboardingEventsHandler
+    private let softwareUpdateHandler: NotchSoftwareUpdateEventsHandler
     private var settingsObserver: NotchSettingsObserver?
     private var cancellables = Set<AnyCancellable>()
 
@@ -186,6 +187,10 @@ final class NotchEventCoordinator: ObservableObject {
             mediaHandler: mediaHandler,
             homePageHandler: homePageHandler
         )
+        self.softwareUpdateHandler = NotchSoftwareUpdateEventsHandler(
+            notchViewModel: notchViewModel,
+            settingsViewModel: settingsViewModel
+        )
 
         setupEventSubscriptions(
             powerViewModel: powerViewModel,
@@ -289,6 +294,11 @@ final class NotchEventCoordinator: ObservableObject {
     func handleVpnEvent(_ event: VpnEvent) {
         guard !isOnboardingActive else { return }
         connectivityHandler.handleVpn(event)
+    }
+
+    func handleSoftwareUpdateEvent(_ event: SoftwareUpdateEvent) {
+        guard !isOnboardingActive else { return }
+        softwareUpdateHandler.handleSoftwareUpdate(event)
     }
 
     @discardableResult

@@ -133,14 +133,20 @@ enum NotchContentRegistry {
         )
     }
 
+    enum SoftwareUpdate {
+        static let update = NotchContentDescriptor(
+            id: "softwareUpdate",
+            priority: NotchContentPriority.softwareUpdate
+        )
+    }
+
     enum Settings {
         static let language = NotchContentDescriptor(
             id: "settings.language"
         )
-        static let softwareUpdate = NotchContentDescriptor(
-            id: "settings.softwareUpdate",
-            priority: NotchContentPriority.softwareUpdate
-        )
+        static var softwareUpdate: NotchContentDescriptor {
+            SoftwareUpdate.update
+        }
     }
 
     enum Screenshot {

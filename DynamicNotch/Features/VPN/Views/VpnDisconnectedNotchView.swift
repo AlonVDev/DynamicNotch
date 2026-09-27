@@ -37,7 +37,7 @@ struct VpnDisconnectedNotchView: View {
                 compactView
             }
         }
-        .font(.system(size: 14))
+        .font(.system(size: isNotchlessScreen ? 13 : 14))
     }
     
     @ViewBuilder

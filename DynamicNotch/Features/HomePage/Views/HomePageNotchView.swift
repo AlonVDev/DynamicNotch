@@ -91,23 +91,47 @@ struct HomePageNotchView: View {
         let settled = isPageSettled
         
         VStack {
-            ScrollView(.vertical, showsIndicators: false) {
-                LazyVStack(spacing: 20) {
-                    ForEach(activePages) { page in
-                        pageView(for: page)
-                            .containerRelativeFrame(.vertical)
-                            .scrollTransition(.interactive) { content, phase in
-                                content
-                                    .blur(radius: settled ? min(20, CGFloat(abs(phase.value)) * 150) : 20)
-                                    .opacity(settled ? max(0.7, 1.0 - (abs(phase.value) * 2.0)) : 0.7)
-                            }
-                            .id(page)
+            ScrollViewReader { proxy in
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 20) {
+                        ForEach(activePages) { page in
+                            pageView(for: page)
+                                .containerRelativeFrame(.vertical)
+                                .scrollTransition(.interactive) { content, phase in
+                                    content
+                                        .blur(radius: settled ? min(20, CGFloat(abs(phase.value)) * 150) : 20)
+                                        .opacity(settled ? max(0.7, 1.0 - (abs(phase.value) * 2.0)) : 0.7)
+                                }
+                                .id(page)
+                        }
+                    }
+                    .scrollTargetLayout()
+                }
+                .scrollTargetBehavior(.viewAligned)
+                .scrollPosition(id: $currentPage, anchor: .top)
+                .onAppear {
+                    let targetPage = activePages.contains(initialPage) ? initialPage : (activePages.first ?? .camera)
+                    currentPage = targetPage
+                    proxy.scrollTo(targetPage, anchor: .top)
+
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                        proxy.scrollTo(targetPage, anchor: .top)
                     }
                 }
-                .scrollTargetLayout()
+                .onChange(of: notchViewModel.presentedNotchSize.height) { _, _ in
+                    if let current = currentPage {
+                        proxy.scrollTo(current, anchor: .top)
+                    }
+                }
+                .onChange(of: initialPage) { _, newPage in
+                    if newPage != currentPage && activePages.contains(newPage) {
+                        currentPage = newPage
+                        withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
+                            proxy.scrollTo(newPage, anchor: .top)
+                        }
+                    }
+                }
             }
-            .scrollTargetBehavior(.viewAligned)
-            .scrollPosition(id: $currentPage)
             .mask {
                 if !isNotchlessScreen && !notchViewModel.isDynamicIsland {
                     let baseHeight = notchViewModel.notchModel.baseHeight
@@ -135,11 +159,6 @@ struct HomePageNotchView: View {
                 }
             }
         }
-        .onChange(of: initialPage) { _, newPage in
-            if newPage != currentPage && activePages.contains(newPage) {
-                currentPage = newPage
-            }
-        }
         .onChange(of: activePages) { _, newActivePages in
             if let current = currentPage, !newActivePages.contains(current) {
                 if let first = newActivePages.first {
@@ -148,7 +167,7 @@ struct HomePageNotchView: View {
             }
         }
         .onChange(of: currentPage) { oldPage, newPage in
-            guard let newPage = newPage, newPage != oldPage else { return }
+            guard let oldPage = oldPage, let newPage = newPage, newPage != oldPage else { return }
             
             withAnimation(.easeInOut(duration: 0.15)) {
                 isWaitingForSizeUpdate = true

@@ -19,11 +19,6 @@ struct NotchSurfaceContainerView: View {
                             width: notchViewModel.notchModel.baseWidth,
                             height: notchViewModel.notchModel.baseHeight
                         )
-                        .scaleEffect(
-                            x: shouldApplyPressScale ? notchViewModel.pressScale : 1,
-                            y: shouldApplyPressScale ? notchViewModel.pressScale : 1,
-                            anchor: .top
-                        )
                         .allowsHitTesting(false)
                 }
             }

@@ -20,6 +20,8 @@ struct DragAndDropDropZoneView: View {
     let target: DragAndDropTarget
     let isTargeted: Bool
     
+    @Environment(\.isNotchlessScreen) private var isNotchlessScreen
+    
     var body: some View {
         VStack {
             Spacer()
@@ -30,8 +32,8 @@ struct DragAndDropDropZoneView: View {
             )
             .frame(maxWidth: .infinity, maxHeight: AirDropDropZoneMetrics.height)
         }
-        .padding(.horizontal, AirDropDropZoneMetrics.horizontalPadding)
-        .padding(.vertical, AirDropDropZoneMetrics.verticalPadding)
+        .padding(.horizontal, isNotchlessScreen ? 12 : AirDropDropZoneMetrics.horizontalPadding)
+        .padding(.bottom, isNotchlessScreen ? 12 : AirDropDropZoneMetrics.verticalPadding)
     }
 }
 

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TrayNotchView: View {
     @ObservedObject var airDropViewModel: AirDropNotchViewModel
+    @Environment(\.isNotchlessScreen) private var isNotchlessScreen
 
     private var isTargeted: Bool {
         airDropViewModel.targetedDropTarget == .tray
@@ -21,8 +22,8 @@ struct TrayNotchView: View {
             TrayDropZoneContent(isTargeted: isTargeted)
                 .frame(maxWidth: .infinity, maxHeight: AirDropDropZoneMetrics.height)
         }
-        .padding(.horizontal, AirDropDropZoneMetrics.horizontalPadding)
-        .padding(.vertical, AirDropDropZoneMetrics.verticalPadding)
+        .padding(.horizontal, isNotchlessScreen ? 10 : AirDropDropZoneMetrics.horizontalPadding)
+        .padding(.bottom, isNotchlessScreen ? 10 : AirDropDropZoneMetrics.verticalPadding)
     }
 }
 
