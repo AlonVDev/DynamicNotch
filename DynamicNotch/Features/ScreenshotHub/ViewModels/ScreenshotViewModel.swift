@@ -17,6 +17,12 @@ final class ScreenshotViewModel: ObservableObject {
         monitorService.scanNow()
     }
     
+    var savedLocation: String {
+        let dirURL = monitorService.userTargetDirectoryURL
+        let name = fileManager.displayName(atPath: dirURL.path)
+        return name.isEmpty ? dirURL.lastPathComponent : name
+    }
+    
     private(set) var isDropped = false
     private(set) var isDeleted = false
     private(set) var isSavedToDisk = false

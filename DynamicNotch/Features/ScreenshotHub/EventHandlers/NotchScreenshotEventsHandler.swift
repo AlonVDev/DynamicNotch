@@ -37,16 +37,22 @@ final class NotchScreenshotEventsHandler {
             guard let self else { return }
             guard self.settingsViewModel.screenRecording.isScreenshotActivityEnabled else { return }
             
-            ScreenshotFlyAnimationService.shared.playFlyToNotchAnimation(image: screenshot.image) { [weak self] in
-                guard let self else { return }
-                let content = ScreenshotNotchContent(viewModel: self.screenshotViewModel)
-                if self.settingsViewModel.screenRecording.isScreenshotAutoHideEnabled {
-                    let duration = TimeInterval(self.settingsViewModel.screenRecording.screenshotTemporaryActivityDuration)
-                    self.notchViewModel.send(.showTemporaryNotification(content, duration: duration))
-                } else {
-                    self.notchViewModel.send(.showLiveActivity(content))
+            ScreenshotFlyAnimationService.shared.playFlyToNotchAnimation(
+                image: screenshot.image,
+                onReachNotch: { [weak self] in
+                    self?.notchViewModel.pulseNotch()
+                },
+                onComplete: { [weak self] in
+                    guard let self else { return }
+                    let content = ScreenshotNotchContent(viewModel: self.screenshotViewModel)
+                    if self.settingsViewModel.screenRecording.isScreenshotAutoHideEnabled {
+                        let duration = TimeInterval(self.settingsViewModel.screenRecording.screenshotTemporaryActivityDuration)
+                        self.notchViewModel.send(.showTemporaryNotification(content, duration: duration))
+                    } else {
+                        self.notchViewModel.send(.showLiveActivity(content))
+                    }
                 }
-            }
+            )
         }
         
         screenshotViewModel.onScreenshotDismissed = { [weak self] in
