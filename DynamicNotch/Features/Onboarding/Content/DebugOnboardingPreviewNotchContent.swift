@@ -26,6 +26,10 @@ struct DebugOnboardingPreviewNotchContent: NotchContentProtocol, DynamicIslandCu
         step.notchSize(baseWidth: baseWidth, baseHeight: baseHeight)
     }
     
+    func dynamicIslandSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+        step.dynamicIslandSize(baseWidth: baseWidth, baseHeight: baseHeight)
+    }
+    
     func cornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
         return (top: 24, bottom: 36)
     }

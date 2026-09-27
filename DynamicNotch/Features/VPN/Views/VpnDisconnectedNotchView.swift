@@ -47,7 +47,7 @@ struct VpnDisconnectedNotchView: View {
                 Image(nsImage: nsImage)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: isNotchlessScreen ? 20 : 30, height: isNotchlessScreen ? 20 : 30)
+                    .frame(width: isNotchlessScreen ? 22 : 30, height: isNotchlessScreen ? 22 : 30)
                     .cornerRadius(isNotchlessScreen ? 10 : 6)
                 
             } else {
@@ -60,9 +60,8 @@ struct VpnDisconnectedNotchView: View {
             Text(verbatim: "Inactive")
                 .foregroundStyle(.red)
         }
-        .padding(.leading, isNotchlessScreen ? 6.scaled(by: scale) : 11.scaled(by: scale))
+        .padding(.leading, isNotchlessScreen ? 4.scaled(by: scale) : 11.scaled(by: scale))
         .padding(.trailing, isNotchlessScreen ? 6.scaled(by: scale) : 14.scaled(by: scale))
-        .padding(.vertical, 10)
     }
     
     @ViewBuilder
@@ -114,8 +113,8 @@ struct VpnDisconnectedNotchView: View {
                     .foregroundStyle(Color.gray)
             }
         }
-        .padding(.horizontal, isNotchlessScreen ? 20 : 36)
-        .padding(.bottom, isNotchlessScreen ? 9 : 10)
+        .padding(.horizontal, isNotchlessScreen ? 15 : 36)
+        .padding(.bottom, isNotchlessScreen ? 4 : 10)
     }
     
     private func getAppIcon(for bundleID: String) -> NSImage? {

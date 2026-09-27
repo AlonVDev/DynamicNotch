@@ -229,8 +229,9 @@ struct VpnSettingsView: View {
                     
                     Spacer()
                     
-                    Text(verbatim: "Active")
+                    Text("00:10")
                         .foregroundStyle(.white.opacity(0.8))
+                        .monospacedDigit()
                         .lineLimit(1)
                 }
                 .padding(.leading, 6)

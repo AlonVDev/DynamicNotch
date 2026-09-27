@@ -16,7 +16,7 @@ struct ScreenRecordingResultNotchView: View {
             
             buttons
         }
-        .padding(.horizontal, isNotchlessScreen ? 10 : 40)
+        .padding(.horizontal, isNotchlessScreen ? 14 : 40)
         .padding(.bottom, isNotchlessScreen ? 10 : 10)
     }
     

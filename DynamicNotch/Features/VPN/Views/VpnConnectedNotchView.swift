@@ -46,6 +46,12 @@ struct VpnConnectedNotchView: View {
             }
         }
         .font(.system(size: 14))
+        .onReceive(timer) { _ in
+            updateTimer()
+        }
+        .onAppear {
+            updateTimer()
+        }
     }
     
     @ViewBuilder
@@ -55,7 +61,7 @@ struct VpnConnectedNotchView: View {
                 Image(nsImage: nsImage)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: isNotchlessScreen ? 20 : 30, height: isNotchlessScreen ? 20 : 30)
+                    .frame(width: isNotchlessScreen ? 22 : 30, height: isNotchlessScreen ? 22 : 30)
                     .cornerRadius(isNotchlessScreen ? 10 : 6)
                 
             } else {
@@ -65,12 +71,12 @@ struct VpnConnectedNotchView: View {
             }
             Spacer()
             
-            Text(verbatim: "Active")
-                .foregroundStyle(.white)
+            Text(timeString)
+                .monospacedDigit()
+                .foregroundStyle(.orange.gradient)
         }
-        .padding(.leading, isNotchlessScreen ? 6.scaled(by: scale) : 11.scaled(by: scale))
+        .padding(.leading, isNotchlessScreen ? 4.scaled(by: scale) : 11.scaled(by: scale))
         .padding(.trailing, isNotchlessScreen ? 6.scaled(by: scale) : 14.scaled(by: scale))
-        .padding(.vertical, 10)
     }
     
     @ViewBuilder
@@ -129,8 +135,8 @@ struct VpnConnectedNotchView: View {
                     }
             }
         }
-        .padding(.horizontal, isNotchlessScreen ? 20 : 36)
-        .padding(.bottom, isNotchlessScreen ? 9 : 10)
+        .padding(.horizontal, isNotchlessScreen ? 15 : 36)
+        .padding(.bottom, isNotchlessScreen ? 4 : 10)
     }
     
     private func getAppIcon(for bundleID: String) -> NSImage? {
