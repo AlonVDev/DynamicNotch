@@ -15,9 +15,7 @@ struct HotspotActiveContent: NotchContentProtocol, DynamicIslandCustomizable {
     var appearanceStyle: HotspotAppearanceStyle { settingsViewModel.connectivity.hotspotAppearanceStyle}
     var priority: Int { NotchContentRegistry.Wifi.hotspot.priority }
     var strokeColor: Color {
-        settingsViewModel.isDefaultActivityStrokeEnabled || settingsViewModel.connectivity.isHotspotDefaultStrokeEnabled ?
-            .white.opacity(0.2) :
-            .green.opacity(0.3)
+        .green.opacity(0.3)
     }
     
     func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {

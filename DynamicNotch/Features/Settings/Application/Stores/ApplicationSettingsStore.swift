@@ -69,9 +69,6 @@ final class ApplicationSettingsStore: SettingsStoreBase, NotchSettingsProviding 
     @StoredDefault(key: GeneralSettingsStorage.Keys.notchStrokeEnabled, defaultValue: false)
     var isShowNotchStrokeEnabled: Bool
 
-    @StoredDefault(key: GeneralSettingsStorage.Keys.defaultActivityStrokeEnabled, defaultValue: true)
-    var isDefaultActivityStrokeEnabled: Bool
-
     @StoredDefault(
         key: GeneralSettingsStorage.Keys.notchStrokeWidth,
         defaultValue: 2.5,
@@ -283,7 +280,6 @@ final class ApplicationSettingsStore: SettingsStoreBase, NotchSettingsProviding 
         resetGestures()
         resetNotchContentPriorities()
         isShowNotchStrokeEnabled = defaultBool(for: GeneralSettingsStorage.Keys.notchStrokeEnabled)
-        isDefaultActivityStrokeEnabled = defaultBool(for: GeneralSettingsStorage.Keys.defaultActivityStrokeEnabled)
         isNotchSizeTemporaryActivityEnabled = defaultBool(for: GeneralSettingsStorage.Keys.notchSizeTemporaryActivityEnabled)
         notchSizeTemporaryActivityDuration = Self.clampTemporaryActivityDuration(
             defaultInt(for: GeneralSettingsStorage.Keys.notchSizeTemporaryActivityDuration)
@@ -321,24 +317,6 @@ final class ApplicationSettingsStore: SettingsStoreBase, NotchSettingsProviding 
 
     func resetNotchContentPriorities() {
         notchContentPriorityOverrides = [:]
-    }
-
-    private static func resolvedDefaultActivityStrokeEnabled(defaults: UserDefaults) -> Bool {
-        if let currentValue = defaults.object(forKey: GeneralSettingsStorage.Keys.defaultActivityStrokeEnabled) as? Bool {
-            return currentValue
-        }
-
-        let legacyKeys = [
-            GeneralSettingsStorage.Keys.downloadsDefaultStrokeEnabled,
-            GeneralSettingsStorage.Keys.airDropDefaultStrokeEnabled,
-            GeneralSettingsStorage.Keys.focusDefaultStrokeEnabled,
-            GeneralSettingsStorage.Keys.hotspotDefaultStrokeEnabled
-        ]
-
-        return legacyKeys.contains { key in
-            guard defaults.object(forKey: key) != nil else { return false }
-            return defaults.bool(forKey: key)
-        }
     }
 
     private static func resolvedBool(defaults: UserDefaults, key: String) -> Bool {

@@ -18,8 +18,6 @@ struct FocusOffNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     var isExpandable: Bool { true }
 
     var strokeColor: Color {
-        settingsViewModel.isDefaultActivityStrokeEnabled ?
-        .white.opacity(0.2) :
         focusModeType.tint.opacity(0.3)
     }
 

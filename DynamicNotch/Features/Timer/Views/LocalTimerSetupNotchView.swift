@@ -35,8 +35,8 @@ struct LocalTimerSetupNotchView: View {
             bottomControls
                 .padding(.trailing, 4)
         }
-        .padding(.horizontal, isNotchlessScreen ? 8 : 8)
-        .padding(.bottom, isNotchlessScreen ? 8 : 5)
+        .padding(.horizontal, isNotchlessScreen ? 15 : 40)
+        .padding(.bottom, 15)
     }
 
     private var rulerSection: some View {

@@ -251,25 +251,6 @@ final class NotchSettingsObserver {
                 }
             }
             .store(in: &cancellables)
-
-        settingsViewModel.screenRecording.$isScreenRecordingDefaultStrokeEnabled
-            .removeDuplicates()
-            .dropFirst()
-            .sink { [weak self] _ in
-                guard let self else { return }
-                if self.screenRecordingViewModel.isRecording,
-                   self.settingsViewModel.isLiveActivityEnabled(.screenRecording) {
-                    self.notchViewModel.send(
-                        .showLiveActivity(
-                            ScreenRecordingContent(
-                                screenRecordingViewModel: self.screenRecordingViewModel,
-                                settingsViewModel: self.settingsViewModel
-                            )
-                        )
-                    )
-                }
-            }
-            .store(in: &cancellables)
     }
 
     private func observeLockScreenSettings() {

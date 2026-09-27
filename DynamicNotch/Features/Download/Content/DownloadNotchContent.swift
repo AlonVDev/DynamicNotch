@@ -23,8 +23,6 @@ struct DownloadNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
     
     var strokeColor: Color {
-        settingsViewModel.isDefaultActivityStrokeEnabled ?
-        .white.opacity(0.2) :
         .accentColor.opacity(0.30)
     }
     

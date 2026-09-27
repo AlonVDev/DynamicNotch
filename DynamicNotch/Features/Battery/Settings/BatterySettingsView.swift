@@ -417,10 +417,6 @@ struct BatterySettingsView: View {
             return .clear
         }
 
-        if appearanceSettings.isDefaultActivityStrokeEnabled {
-            return .white.opacity(0.2)
-        }
-
         return kind == .low ? .red.opacity(0.3) : .green.opacity(0.3)
     }
 }

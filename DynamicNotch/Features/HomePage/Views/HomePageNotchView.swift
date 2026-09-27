@@ -90,80 +90,51 @@ struct HomePageNotchView: View {
         let activePages = settings.homePageOrder.filter { !settings.homePageDisabled.contains($0) }
         let settled = isPageSettled
         
-        VStack() {
-            if settings.homePageScrollAxis != .vertical {
-                Spacer()
-            }
-
-            ScrollView(settings.homePageScrollAxis == .vertical ? .vertical : .horizontal, showsIndicators: false) {
-                if settings.homePageScrollAxis == .vertical {
-                    LazyVStack(spacing: 20) {
-                        ForEach(activePages) { page in
-                            pageView(for: page)
-                                .containerRelativeFrame(.vertical)
-                                .scrollTransition(.interactive) { content, phase in
-                                    content
-                                        .blur(radius: settled ? min(20, CGFloat(abs(phase.value)) * 150) : 20)
-                                        .opacity(settled ? max(0.7, 1.0 - (abs(phase.value) * 2.0)) : 0.7)
-                                }
-                                .id(page)
-                        }
+        VStack {
+            ScrollView(.vertical, showsIndicators: false) {
+                LazyVStack(spacing: 20) {
+                    ForEach(activePages) { page in
+                        pageView(for: page)
+                            .containerRelativeFrame(.vertical)
+                            .scrollTransition(.interactive) { content, phase in
+                                content
+                                    .blur(radius: settled ? min(20, CGFloat(abs(phase.value)) * 150) : 20)
+                                    .opacity(settled ? max(0.7, 1.0 - (abs(phase.value) * 2.0)) : 0.7)
+                            }
+                            .id(page)
                     }
-                    .scrollTargetLayout()
-                    
-                } else {
-                    LazyHStack(spacing: 20) {
-                        ForEach(activePages) { page in
-                            pageView(for: page)
-                                .containerRelativeFrame(.horizontal)
-                                .scrollTransition(.interactive) { content, phase in
-                                    content
-                                        .blur(radius: settled ? min(20, CGFloat(abs(phase.value)) * 150) : 20)
-                                        .opacity(settled ? max(0.7, 1.0 - (abs(phase.value) * 2.0)) : 0.7)
-                                }
-                                .id(page)
-                        }
-                    }
-                    .scrollTargetLayout()
                 }
+                .scrollTargetLayout()
             }
             .scrollTargetBehavior(.viewAligned)
             .scrollPosition(id: $currentPage)
             .mask {
-                if settings.homePageScrollAxis == .vertical {
-                    let totalHeight = notchViewModel.presentedNotchSize.height
+                if !isNotchlessScreen && !notchViewModel.isDynamicIsland {
                     let baseHeight = notchViewModel.notchModel.baseHeight
-                    let cornerRadius: CGFloat = 20
+                    let cornerRadius: CGFloat = 30
                     
-                    if totalHeight > 0 {
-                        let fadeStart = baseHeight / totalHeight
-                        let fadeEnd = min(1.0, (baseHeight + 4) / totalHeight)
-                        
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                            .mask(
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .mask(
+                            VStack(spacing: 0) {
+                                Color.clear
+                                    .frame(height: baseHeight)
                                 LinearGradient(
                                     stops: [
                                         .init(color: .clear, location: 0),
-                                        .init(color: .clear, location: fadeStart),
-                                        .init(color: .black, location: fadeEnd),
                                         .init(color: .black, location: 1)
                                     ],
                                     startPoint: .top,
                                     endPoint: .bottom
                                 )
-                            )
-                    } else {
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                    }
+                                .frame(height: 4)
+                                Color.black
+                            }
+                        )
                 } else {
                     Color.black
                 }
             }
         }
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .padding(.horizontal, isNotchlessScreen ? 8 : 33)
-        .padding(.bottom, isNotchlessScreen ? 9 : 10)
-        .contentShape(Rectangle())
         .onChange(of: initialPage) { _, newPage in
             if newPage != currentPage && activePages.contains(newPage) {
                 currentPage = newPage
@@ -211,7 +182,7 @@ struct HomePageNotchView: View {
                         )
                     )
                 )
-
+                
                 withAnimation(.easeInOut(duration: 0.35)) {
                     isWaitingForSizeUpdate = false
                 }

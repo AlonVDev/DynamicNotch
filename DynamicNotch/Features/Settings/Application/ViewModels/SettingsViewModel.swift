@@ -42,7 +42,6 @@ final class SettingsViewModel: ObservableObject, NotchSettingsProviding {
         case lowPower
         case fullPower
         case bluetooth
-        case wifi
         case vpn
         case vpnDisconnected
         case focusOn
@@ -121,11 +120,6 @@ final class SettingsViewModel: ObservableObject, NotchSettingsProviding {
     var isShowNotchStrokeEnabled: Bool {
         get { application.isShowNotchStrokeEnabled }
         set { application.isShowNotchStrokeEnabled = newValue }
-    }
-
-    var isDefaultActivityStrokeEnabled: Bool {
-        get { application.isDefaultActivityStrokeEnabled }
-        set { application.isDefaultActivityStrokeEnabled = newValue }
     }
 
     var notchStrokeWidth: Double {
@@ -247,7 +241,7 @@ final class SettingsViewModel: ObservableObject, NotchSettingsProviding {
     }
 
     var isHUDColoredLevelStrokeEnabled: Bool {
-        get { application.isDefaultActivityStrokeEnabled ? false : hud.isColoredLevelStrokeEnabled }
+        get { hud.isColoredLevelStrokeEnabled }
         set { hud.isColoredLevelStrokeEnabled = newValue }
     }
 
@@ -326,11 +320,6 @@ final class SettingsViewModel: ObservableObject, NotchSettingsProviding {
         set { connectivity.isBluetoothTemporaryActivityEnabled = newValue }
     }
 
-    var isWifiTemporaryActivityEnabled: Bool {
-        get { connectivity.isWifiTemporaryActivityEnabled }
-        set { connectivity.isWifiTemporaryActivityEnabled = newValue }
-    }
-
     var isVpnTemporaryActivityEnabled: Bool {
         get { connectivity.isVpnTemporaryActivityEnabled }
         set { connectivity.isVpnTemporaryActivityEnabled = newValue }
@@ -397,8 +386,6 @@ final class SettingsViewModel: ObservableObject, NotchSettingsProviding {
             return battery.isFullPowerTemporaryActivityEnabled
         case .bluetooth:
             return connectivity.isBluetoothTemporaryActivityEnabled
-        case .wifi:
-            return connectivity.isWifiTemporaryActivityEnabled
         case .vpn:
             return connectivity.isVpnTemporaryActivityEnabled
         case .vpnDisconnected:
@@ -422,8 +409,6 @@ final class SettingsViewModel: ObservableObject, NotchSettingsProviding {
             return scaledTemporaryActivityDuration(TimeInterval(battery.fullPowerTemporaryActivityDuration))
         case .bluetooth:
             return scaledTemporaryActivityDuration(TimeInterval(connectivity.bluetoothTemporaryActivityDuration))
-        case .wifi:
-            return scaledTemporaryActivityDuration(TimeInterval(connectivity.wifiTemporaryActivityDuration))
         case .vpn:
             return scaledTemporaryActivityDuration(TimeInterval(connectivity.vpnTemporaryActivityDuration))
         case .vpnDisconnected:

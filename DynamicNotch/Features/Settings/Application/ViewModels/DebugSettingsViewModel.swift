@@ -109,12 +109,6 @@ final class DebugSettingsViewModel: ObservableObject {
         notchEventCoordinator.handleBluetoothEvent(.connected)
     }
 
-    func triggerWifiPreview() {
-        wifiViewModel.wifiConnected = true
-        wifiViewModel.wifiName = "Debug Wi-Fi"
-        notchEventCoordinator.handleWifiEvent(.wifiConnected)
-    }
-
     func triggerNoInternetConnectionPreview() {
         notchEventCoordinator.handleWifiEvent(.noInternetConnection)
     }
@@ -532,13 +526,6 @@ final class DebugSettingsViewModel: ObservableObject {
                 try await self.playCombinedDragAndDropPreview()
                 try await self.playFileTrayActivePreview()
                 try await self.playBluetoothPreview()
-                try await self.playTemporaryPreview(
-                    WifiConnectedNotchContent(
-                        wifiViewModel: wifiViewModel
-                    ),
-                    id: NotchContentRegistry.DebugSequence.wifi,
-                    duration: 3
-                )
                 try await self.playTemporaryPreview(
                     NoInternetConnectionContent(
                         onDismiss: { [weak self] in

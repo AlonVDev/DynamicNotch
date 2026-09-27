@@ -11,19 +11,19 @@ struct BatteryCompactStatusView: View {
     var body: some View {
         HStack {
             Text(verbatim: title)
-                .font(.system(size: 14))
+                .font(.system(size: isNotchlessScreen ? 13 : 14))
                 .foregroundColor(.white)
 
             Spacer()
 
             HStack(spacing: 6) {
                 Text("\(batteryLevel)%")
-                    .font(.system(size: 14))
+                    .font(.system(size: isNotchlessScreen ? 13 : 14))
                     .foregroundStyle(tint.gradient)
 
                 HStack(spacing: 1.5) {
                     ZStack(alignment: .leading) {
-                        RoundedRectangle(cornerRadius: 6, style: .continuous)
+                        RoundedRectangle(cornerRadius: isNotchlessScreen ? 5 : 6, style: .continuous)
                             .fill(tint.opacity(0.3))
 
                         GeometryReader { geo in
@@ -36,8 +36,8 @@ struct BatteryCompactStatusView: View {
                                 .frame(width: max(0, width))
                         }
                     }
-                    .frame(width: 28, height: 16)
-                    .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+                    .frame(width: isNotchlessScreen ? 26 : 28, height: isNotchlessScreen ? 14 : 16)
+                    .clipShape(RoundedRectangle(cornerRadius: isNotchlessScreen ? 5 : 6, style: .continuous))
 
                     RoundedRectangle(cornerRadius: 1.5, style: .continuous)
                         .fill(batteryLevel == 100 ? tint.gradient : tint.opacity(0.3).gradient)
@@ -45,7 +45,7 @@ struct BatteryCompactStatusView: View {
                 }
             }
         }
-        .padding(.leading, isNotchlessScreen ? 8.scaled(by: scale) : 16.scaled(by: scale))
+        .padding(.leading, isNotchlessScreen ? 7.scaled(by: scale) : 16.scaled(by: scale))
         .padding(.trailing, isNotchlessScreen ? 6.scaled(by: scale) : 16.scaled(by: scale))
     }
 }

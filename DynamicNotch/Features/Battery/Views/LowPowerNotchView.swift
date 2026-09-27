@@ -23,29 +23,33 @@ struct LowPowerNotchView: View {
                     tint: batteryColor
                 )
             } else {
-                VStack {
-                    Spacer()
-
-                    HStack {
-                        VStack(alignment: .leading, spacing: 3) {
-                            title
-                            description
-                        }
-
-                        Spacer()
-
-                        if powerService.isLowPowerMode {
-                            yellowIndicator
-                        } else {
-                            redIndicator
-                        }
-                    }
-                }
-                .padding(.leading, isNotchlessScreen ? 25 : 45)
-                .padding(.trailing, isNotchlessScreen ? 20 : 40)
-                .padding(.bottom, isNotchlessScreen ? 20 : 20)
+                detailStyle
             }
         }
+    }
+    
+    @ViewBuilder
+    private var detailStyle: some View {
+        VStack {
+            Spacer()
+
+            HStack {
+                VStack(alignment: .leading, spacing: 3) {
+                    title
+                    description
+                }
+                Spacer()
+
+                if powerService.isLowPowerMode {
+                    yellowIndicator
+                } else {
+                    redIndicator
+                }
+            }
+        }
+        .padding(.leading, isNotchlessScreen ? 25 : 45)
+        .padding(.trailing, isNotchlessScreen ? 20 : 40)
+        .padding(.bottom, isNotchlessScreen ? 23 : 20)
     }
 
     @ViewBuilder

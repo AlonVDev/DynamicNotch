@@ -16,10 +16,6 @@ struct DragAndDropCombinedNotchContent: NotchContentProtocol, DynamicIslandCusto
     var priority: Int { NotchContentRegistry.DragAndDrop.combined.priority }
 
     var strokeColor: Color {
-        if settingsViewModel.isDefaultActivityStrokeEnabled {
-            return .white.opacity(0.2)
-        }
-
         switch airDropViewModel.targetedDropTarget {
         case .airDrop:
             return DragAndDropTarget.airDrop.activityStrokeColor

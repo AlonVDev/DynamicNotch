@@ -22,8 +22,6 @@ struct TrayNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     var priority: Int { NotchContentRegistry.DragAndDrop.tray.priority }
 
     var strokeColor: Color {
-        settingsViewModel.isDefaultActivityStrokeEnabled ?
-        .white.opacity(0.2) :
         DragAndDropTarget.tray.activityStrokeColor
     }
     

@@ -15,7 +15,6 @@ struct BluetoothConnectedNotchContent: NotchContentProtocol, DynamicIslandCustom
     var strokeColor: Color {
         guard settings.bluetoothAppearanceStyle.supportsBatteryPresentation,
               settings.isBluetoothBatteryStrokeEnabled,
-              applicationSettings.isDefaultActivityStrokeEnabled == false,
               let batteryLevel = bluetoothViewModel.batteryLevel else {
             return .white.opacity(0.2)
         }
@@ -39,6 +38,18 @@ struct BluetoothConnectedNotchContent: NotchContentProtocol, DynamicIslandCustom
             width = settings.bluetoothBatteryIndicatorStyle == .circle ? 145 : 145
         }
         return .init(width: baseWidth + CGFloat(width), height: settings.bluetoothAppearanceStyle == .compact ? baseHeight : 95)
+    }
+    
+    func dynamicIslandSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+        let width: CGFloat
+
+        switch settings.bluetoothAppearanceStyle {
+        case .compact:
+            width = settings.bluetoothBatteryIndicatorStyle == .circle ? 60 : 100
+        case .detailed:
+            width = settings.bluetoothBatteryIndicatorStyle == .circle ? 180 : 200
+        }
+        return .init(width: baseWidth + CGFloat(width), height: settings.bluetoothAppearanceStyle == .compact ? baseHeight : 75)
     }
     
     @MainActor

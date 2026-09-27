@@ -10,7 +10,10 @@ struct DynamicIslandShape: Shape {
 
     func path(in rect: CGRect) -> Path {
         var path = Path()
-        path.addRoundedRect(in: rect, cornerSize: CGSize(width: cornerRadius, height: cornerRadius))
+        guard rect.width > 0, rect.height > 0 else { return path }
+        let maxRadius = min(rect.width, rect.height) * 0.5
+        let clampedRadius = max(0, min(cornerRadius, maxRadius))
+        path.addRoundedRect(in: rect, cornerSize: CGSize(width: clampedRadius, height: clampedRadius))
         return path
     }
 }

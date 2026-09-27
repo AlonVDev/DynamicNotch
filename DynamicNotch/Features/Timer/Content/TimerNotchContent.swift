@@ -16,10 +16,7 @@ struct TimerNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
     
     var strokeColor: Color {
-        if let settingsViewModel, settingsViewModel.isDefaultActivityStrokeEnabled {
-            return .white.opacity(0.2)
-        }
-        return .orange.opacity(0.3)
+        .orange.opacity(0.3)
     }
 
     var isExpandable: Bool { true }

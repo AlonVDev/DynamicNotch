@@ -22,8 +22,6 @@ struct AirDropNotchContent: NotchContentProtocol {
     var priority: Int { NotchContentRegistry.DragAndDrop.airDrop.priority }
 
     var strokeColor: Color {
-        settingsViewModel.isDefaultActivityStrokeEnabled ?
-        .white.opacity(0.2) :
         DragAndDropTarget.airDrop.activityStrokeColor
     }
     

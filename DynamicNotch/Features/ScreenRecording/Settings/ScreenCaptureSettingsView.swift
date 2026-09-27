@@ -59,17 +59,6 @@ struct ScreenCaptureSettingsView: View {
                 screenRecordingAppearancePickerContent(for: style, isSelected: isSelected)
             }
             .accessibilityIdentifier("settings.activities.live.screenRecording.style")
-            
-            Divider().opacity(0.6)
-
-            SettingsStrokeToggleRow(
-                title: "settings.notch.defaultStrokeColor.title",
-                description: "settings.notch.defaultStrokeColor.desc",
-                isOn: $settings.isScreenRecordingDefaultStrokeEnabled,
-                accessibilityIdentifier: "settings.activities.live.screenRecording.defaultStroke"
-            )
-            .disabled(!settings.isScreenRecordingLiveActivityEnabled)
-            .opacity(settings.isScreenRecordingLiveActivityEnabled ? 1 : 0.5)
         }
     }
 
@@ -124,15 +113,7 @@ struct ScreenCaptureSettingsView: View {
     }
 
     private var screenRecordingPreviewStrokeColor: Color {
-        guard appearanceSettings.isShowNotchStrokeEnabled else {
-            return .clear
-        }
-
-        if appearanceSettings.isDefaultActivityStrokeEnabled || settings.isScreenRecordingDefaultStrokeEnabled {
-            return .white.opacity(0.2)
-        }
-
-        return .red.opacity(0.3)
+        appearanceSettings.isShowNotchStrokeEnabled ? .red.opacity(0.3) : .clear
     }
     
     private var saveLocationSection: some View {

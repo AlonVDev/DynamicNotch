@@ -25,7 +25,7 @@ struct HudNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     let showsIndicatorGlow: Bool
     let usesColoredLevelStroke: Bool
     
-    var strokeColor: Color { HudLevelStyling.strokeTint(for: level, isEnabled: resolvedColoredLevelStroke) }
+    var strokeColor: Color { HudLevelStyling.strokeTint(for: level, isEnabled: usesColoredLevelStroke) }
 
     init(
         kind: HudPresentationKind,
@@ -134,9 +134,5 @@ struct HudNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
         case .expandedDetailed:
             return 65
         }
-    }
-
-    private var resolvedColoredLevelStroke: Bool {
-        usesColoredLevelStroke && applicationSettings?.isDefaultActivityStrokeEnabled != true
     }
 }

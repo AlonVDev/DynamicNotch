@@ -44,7 +44,6 @@ enum NotchContentRegistry {
             id: "hotspot.active",
             priorityKey: .hotspot
         )
-        static let wifi = NotchContentDescriptor(id: "wifi.connected")
         static let noInternet = NotchContentDescriptor(id: "network.noInternetConnection")
     }
     
@@ -190,7 +189,6 @@ enum NotchContentRegistry {
         static let combinedDrop = id(DragAndDrop.combined.id)
         static let trayActive = id(DragAndDrop.trayActive.id)
         static let bluetooth = id(Bluetooth.bluetooth.id)
-        static let wifi = id(Wifi.wifi.id)
         static let vpn = id(Vpn.vpn.id)
         static let vpnDisconnected = id(Vpn.disconnected.id)
         static let noInternet = id(Wifi.noInternet.id)

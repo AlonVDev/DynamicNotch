@@ -9,6 +9,7 @@ struct NotchBackgroundSurface: View {
     let strokeColor: Color
     var strokeWidth: CGFloat = 2.0
     var height: CGFloat? = nil
+    var baseWidth: CGFloat? = nil
     var baseHeight: CGFloat? = nil
     
     var body: some View {

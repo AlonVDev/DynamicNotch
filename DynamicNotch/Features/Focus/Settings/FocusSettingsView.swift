@@ -152,14 +152,6 @@ struct FocusSettingsView: View {
     }
     
     private var focusPreviewStrokeColor: Color {
-        guard appearanceSettings.isShowNotchStrokeEnabled else {
-            return .clear
-        }
-
-        if appearanceSettings.isDefaultActivityStrokeEnabled {
-            return .white.opacity(0.2)
-        }
-
-        return .indigo.opacity(0.3)
+        appearanceSettings.isShowNotchStrokeEnabled ? .indigo.opacity(0.3) : .clear
     }
 }

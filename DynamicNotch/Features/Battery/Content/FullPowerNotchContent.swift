@@ -12,9 +12,7 @@ struct FullPowerNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
 
     var strokeColor: Color {
-        settingsViewModel.isDefaultActivityStrokeEnabled ?
-        .white.opacity(0.2) :
-        (powerService.isLowPowerMode ? .yellow.opacity(0.3) : .green.opacity(0.3))
+        powerService.isLowPowerMode ? .yellow.opacity(0.3) : .green.opacity(0.3)
     }
 
     func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
@@ -22,6 +20,13 @@ struct FullPowerNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
             return .init(width: baseWidth + 180, height: baseHeight)
         }
         return .init(width: baseWidth + 90, height: baseHeight + 70)
+    }
+    
+    func dynamicIslandSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+        if style == .compact {
+            return .init(width: baseWidth + 180, height: baseHeight)
+        }
+        return .init(width: baseWidth + 170, height: baseHeight + 60)
     }
 
     func cornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {

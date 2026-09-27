@@ -18,8 +18,12 @@ struct VpnHomePageNotchContent: NotchContentProtocol, DynamicIslandCustomizable 
         .init(width: baseWidth + 140, height: baseHeight + 105)
     }
     
+    func expandedDynamicIslandSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+        .init(width: baseWidth + 200, height: baseHeight + 95)
+    }
+    
     func expandedDynamicIslandCornerRadius(baseHeight: CGFloat) -> CGFloat {
-        baseHeight * 0.2
+        baseHeight * 0.3
     }
 
     @MainActor

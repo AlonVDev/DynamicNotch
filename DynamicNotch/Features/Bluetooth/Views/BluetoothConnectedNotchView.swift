@@ -24,7 +24,7 @@ struct BluetoothConnectedNotchView: View {
     }
     
     private var isBatteryStrokeActive: Bool {
-        settings.isBluetoothBatteryStrokeEnabled && applicationSettings.isDefaultActivityStrokeEnabled == false
+        settings.isBluetoothBatteryStrokeEnabled
     }
     
     private var clampedLevel: Int? {
@@ -47,7 +47,7 @@ struct BluetoothConnectedNotchView: View {
                 detailedView
             }
         }
-        .font(.system(size: 14))
+        .font(.system(size: isNotchlessScreen ? 13 : 14))
     }
     
     @ViewBuilder
@@ -78,9 +78,8 @@ struct BluetoothConnectedNotchView: View {
                 }
             }
         }
-        .padding(.vertical, 10)
-        .padding(.trailing, isNotchlessScreen ? 4.scaled(by: scale) : 14.scaled(by: scale))
         .padding(.leading, isNotchlessScreen ? 4.scaled(by: scale) : 14.scaled(by: scale))
+        .padding(.trailing, isNotchlessScreen ? 5.scaled(by: scale) : 14.scaled(by: scale))
     }
     
     @ViewBuilder
