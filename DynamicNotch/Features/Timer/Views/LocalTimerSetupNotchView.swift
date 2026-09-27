@@ -19,7 +19,7 @@ struct LocalTimerSetupNotchView: View {
     @State private var scrollDirection: Int = 1
 
     private let tickSpacing: CGFloat = 9.0
-    private static let subMinuteCount: Int = 5 // 10s, 20s, 30s, 40s, 50s
+    private static let subMinuteCount: Int = 5
     private static let subMinuteStepSeconds: Int = 10
     private static let secondsPerMinute: Int = 60
     private static let maxMinutes: Int = 120
@@ -289,15 +289,11 @@ private struct RulerTickView: View {
                 Color.clear
                     .frame(height: 16)
             }
-
             RoundedRectangle(cornerRadius: 2)
                 .fill(tickColor)
                 .shadow(color: Color.orange.opacity(glow * 0.95), radius: 4 * glow, x: 0, y: 0)
                 .shadow(color: Color.orange.opacity(glow * 0.6), radius: 8 * glow, x: 0, y: 0)
-                .frame(
-                    width: 3 + (0.5 * glow),
-                    height: 35 + (2.5 * glow)
-                )
+                .frame(width: 3, height: 35)
         }
         .frame(width: tickSpacing, height: 50)
         .onChange(of: selectedIndex) { oldIndex, newIndex in
@@ -349,10 +345,10 @@ private struct RulerTickView: View {
         let distance: Int
 
         if newIndex >= oldIndex {
-            inTrail = (diff >= 0 && diff <= 3)
+            inTrail = (diff >= 0 && diff <= 1)
             distance = diff
         } else {
-            inTrail = (diff <= 0 && diff >= -3)
+            inTrail = (diff <= 0 && diff >= -1)
             distance = abs(diff)
         }
 
@@ -366,7 +362,7 @@ private struct RulerTickView: View {
     private func checkActiveGlow(currentSelected: Int) {
         guard isDragging else { return }
         let diff = currentSelected - index
-        if diff >= 0 && diff <= 3 {
+        if diff >= 0 && diff <= 1 {
             let targetGlow = 1.0 - (Double(diff) * 0.22)
             glow = max(glow, targetGlow)
             triggerFadeOut()

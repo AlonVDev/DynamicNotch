@@ -7,54 +7,6 @@
 
 import SwiftUI
 
-enum HomePages: String, CaseIterable, Hashable, Codable, Identifiable {
-    case camera
-    case localTimer
-    case vpn
-    
-    var id: String { rawValue }
-    
-    var title: LocalizedStringKey {
-        switch self {
-        case .camera: return "settings.homePage.pages.camera.title"
-        case .localTimer: return "settings.homePage.pages.timer.title"
-        case .vpn: return "settings.homePage.pages.vpn.title"
-        }
-    }
-    
-    var subtitle: LocalizedStringKey {
-        switch self {
-        case .camera: return "settings.homePage.pages.camera.subtitle"
-        case .localTimer: return "settings.homePage.pages.timer.subtitle"
-        case .vpn: return "settings.homePage.pages.vpn.subtitle"
-        }
-    }
-    
-    var icon: String {
-        switch self {
-        case .camera: return "camera.fill"
-        case .localTimer: return "timer"
-        case .vpn: return "network.badge.shield.half.filled"
-        }
-    }
-    
-    var tint: Color {
-        switch self {
-        case .camera: return .gray
-        case .localTimer: return .orange
-        case .vpn: return .blue
-        }
-    }
-    
-    var iconTint: Color {
-        switch self {
-        case .camera: return .black
-        case .localTimer: return .white
-        case .vpn: return .white
-        }
-    }
-}
-
 struct HomePageNotchView: View {
     @Environment(\.isNotchlessScreen) var isNotchlessScreen
     
@@ -112,6 +64,7 @@ struct HomePageNotchView: View {
                 .onAppear {
                     let targetPage = activePages.contains(initialPage) ? initialPage : (activePages.first ?? .camera)
                     currentPage = targetPage
+                    updateLastPageStatus(page: targetPage, activePages: activePages)
                     proxy.scrollTo(targetPage, anchor: .top)
 
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
@@ -160,13 +113,18 @@ struct HomePageNotchView: View {
             }
         }
         .onChange(of: activePages) { _, newActivePages in
+            let updatedPage: HomePages?
             if let current = currentPage, !newActivePages.contains(current) {
-                if let first = newActivePages.first {
-                    currentPage = first
-                }
+                let first = newActivePages.first
+                currentPage = first
+                updatedPage = first
+            } else {
+                updatedPage = currentPage
             }
+            updateLastPageStatus(page: updatedPage, activePages: newActivePages)
         }
         .onChange(of: currentPage) { oldPage, newPage in
+            updateLastPageStatus(page: newPage, activePages: activePages)
             guard let oldPage = oldPage, let newPage = newPage, newPage != oldPage else { return }
             
             withAnimation(.easeInOut(duration: 0.15)) {
@@ -208,6 +166,7 @@ struct HomePageNotchView: View {
             }
         }
         .onDisappear {
+            notchViewModel.isHomePageOnLastPage = false
             let activePages = settings.homePageOrder.filter { !settings.homePageDisabled.contains($0) }
             notchViewModel.send(
                 .showLiveActivity(
@@ -224,6 +183,13 @@ struct HomePageNotchView: View {
             )
             settleTask?.cancel()
             updateTask?.cancel()
+        }
+    }
+    
+    private func updateLastPageStatus(page: HomePages?, activePages: [HomePages]) {
+        let isLast = page != nil && page == activePages.last
+        if notchViewModel.isHomePageOnLastPage != isLast {
+            notchViewModel.isHomePageOnLastPage = isLast
         }
     }
     

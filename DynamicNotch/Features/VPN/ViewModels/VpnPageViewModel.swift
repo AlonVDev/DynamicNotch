@@ -37,7 +37,7 @@ final class VpnPageViewModel: ObservableObject {
         isLoading = true
         Task.detached(priority: .userInitiated) { [weak self] in
             guard let self = self else { return }
-            let list = VPNStatusFetcher.fetchVPNs()
+            var list = VPNStatusFetcher.fetchVPNs()
             
             var connDate: Date? = nil
             let selectedID = UserDefaults.standard.string(forKey: "settings.vpn.selectedID") ?? ""
@@ -47,9 +47,27 @@ final class VpnPageViewModel: ObservableObject {
                 connDate = VPNStatusFetcher.fetchVPNConnectedAt(uuid: activeVpn.id)
             }
             
+            #if DEBUG
+            if UserDefaults.standard.bool(forKey: "debug.vpn.mockThreeDigitTimer") {
+                if list.isEmpty {
+                    list = [
+                        VPNConfiguration(
+                            id: "debug.mock.wireguard",
+                            name: "WireGuard Tunnel",
+                            isConnected: true,
+                            type: "WireGuard",
+                            bundleID: nil
+                        )
+                    ]
+                }
+                connDate = Date().addingTimeInterval(-6120)
+            }
+            #endif
+            
+            let finalVPNList = list
             let finalConnDate = connDate
             await MainActor.run {
-                self.vpns = list
+                self.vpns = finalVPNList
                 self.isLoading = false
                 self.connectedAt = finalConnDate
             }

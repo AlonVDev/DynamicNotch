@@ -349,6 +349,16 @@ struct DebugSettingsView: View {
         debugDivider
 
         DebugActionRow(
+            title: "VPN Connected (100+ min)",
+            description: "Show the VPN notification and Home Page with a 3-digit timer (100+ min).",
+            systemImage: "network.badge.shield.half.filled",
+            color: .orange,
+            action: viewModel.triggerVPNLongTimerPreview
+        )
+
+        debugDivider
+
+        DebugActionRow(
             title: "VPN Disconnected",
             description: "Show the VPN disconnected notification with sample tunnel data.",
             systemImage: "network.badge.shield.half.filled",

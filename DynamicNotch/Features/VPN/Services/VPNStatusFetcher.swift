@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct VPNConfiguration: Identifiable, Hashable {
+struct VPNConfiguration: Identifiable, Hashable, Sendable {
     let id: String
     let name: String
     let isConnected: Bool

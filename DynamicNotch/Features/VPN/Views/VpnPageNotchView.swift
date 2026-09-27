@@ -11,6 +11,7 @@ internal import AppKit
 
 struct VpnPageNotchView: View {
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
+    @Environment(\.notchScale) private var notchScale
     @StateObject private var viewModel = VpnPageViewModel()
     @AppStorage("settings.vpn.selectedID") private var selectedVPNID: String = ""
     
@@ -18,6 +19,17 @@ struct VpnPageNotchView: View {
     @State private var timeString: String = "00:00"
     
     let notchViewModel: NotchViewModel
+    
+    private var isOver100Minutes: Bool {
+        if let minutesString = timeString.split(separator: ":").first,
+           let minutes = Int(minutesString) {
+            return minutes >= 100
+        }
+        if let startDate = viewModel.connectedAt {
+            return Date().timeIntervalSince(startDate) >= 6000
+        }
+        return false
+    }
     
     private func updateTimer() {
         guard let startDate = viewModel.connectedAt else {
@@ -76,7 +88,7 @@ struct VpnPageNotchView: View {
                             textColor: .white.opacity(0.8),
                             backgroundColor: .clear,
                             minDuration: 2.0,
-                            frameWidth: vpn.isConnected ? 120 : 140
+                            frameWidth: vpn.isConnected ? 110.scaled(by: notchScale) : 130.scaled(by: notchScale)
                         )
                         
                         MarqueeText(
@@ -86,15 +98,15 @@ struct VpnPageNotchView: View {
                             textColor: .white.opacity(0.5),
                             backgroundColor: .clear,
                             minDuration: 3.0,
-                            frameWidth: vpn.isConnected ? 120 : 140
+                            frameWidth: vpn.isConnected ? 110.scaled(by: notchScale) : 130.scaled(by: notchScale)
                         )
                     }
                     Spacer()
                 }
-                .padding(.horizontal, 4)
-                
                 timer(for: vpn)
             }
+            .padding(.horizontal, 4)
+            
             buttons(for: vpn)
         }
     }
@@ -119,7 +131,7 @@ struct VpnPageNotchView: View {
     private func timer(for vpn: VPNConfiguration) -> some View {
         if vpn.isConnected {
             Text(timeString)
-                .font(.system(size: 24, weight: .semibold, design: .rounded))
+                .font(.system(size: isOver100Minutes ? 20 : 24, weight: .semibold, design: .rounded))
                 .monospacedDigit()
                 .foregroundStyle(Color.orange)
                 .frame(maxWidth: .infinity, alignment: .trailing)
@@ -129,7 +141,7 @@ struct VpnPageNotchView: View {
             
         } else {
             Text("--:--")
-                .font(.system(size: 20, weight: .medium))
+                .font(.system(size: 24, weight: .semibold))
                 .foregroundColor(.gray)
                 .frame(maxWidth: .infinity, alignment: .trailing)
                 .padding(.trailing, vpn.isConnected ? 0 : 10)

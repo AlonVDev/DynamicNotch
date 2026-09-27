@@ -36,11 +36,17 @@ struct TimerCompactIndicatorView: View {
                     .fill(.black.opacity(0.34))
                     .padding(lineWidth + 2)
 
-                RoundedRectangle(cornerRadius: 1)
-                    .fill(.orange.gradient)
-                    .frame(width: 6, height: 2.5)
-                    .offset(x: 3.5)
-                    .rotationEffect(angle)
+                if source.isPaused {
+                    Image(systemName: "pause.fill")
+                        .font(.system(size: 11))
+                        .foregroundStyle(.orange.gradient)
+                } else {
+                    RoundedRectangle(cornerRadius: 1)
+                        .fill(.orange.gradient)
+                        .frame(width: 6, height: 2.5)
+                        .offset(x: 3.5)
+                        .rotationEffect(angle)
+                }
             }
             .frame(width: isNotchlessScreen ? 16 : 20, height: isNotchlessScreen ? 16: 20)
         }

@@ -16,6 +16,7 @@ final class NotchViewModel: ObservableObject {
     
     @Published var isLocked = false
     @Published var isHoveringScrollableContent = false
+    @Published var isHomePageOnLastPage = false
     @Published var showNotch = false
     @Published var isPressed = false
     @Published var cachedStrokeColor: Color = .clear
@@ -140,11 +141,12 @@ final class NotchViewModel: ObservableObject {
         settings.isNotchSwipeDismissEnabled &&
         (!isActivityPresentationHidden || isLocked || notchModel.temporaryNotificationContent != nil) &&
         displayedContent != nil &&
-        (displayedContent?.id != NotchContentRegistry.HomePage.active.id || notchModel.isLiveActivityExpanded)
+        (displayedContent?.id != NotchContentRegistry.HomePage.active.id || (notchModel.isLiveActivityExpanded && isHomePageOnLastPage))
     }
     
     var canRestoreWithMouseDrag: Bool {
         guard !isLocked else { return false }
+        guard !notchModel.isLiveActivityExpanded else { return false }
         return settings.isNotchMouseDragGesturesEnabled &&
         settings.isNotchSwipeRestoreEnabled &&
         canRestoreDismissedContent
@@ -155,11 +157,12 @@ final class NotchViewModel: ObservableObject {
         settings.isNotchSwipeDismissEnabled &&
         (!isActivityPresentationHidden || isLocked || notchModel.temporaryNotificationContent != nil) &&
         displayedContent != nil &&
-        (displayedContent?.id != NotchContentRegistry.HomePage.active.id || notchModel.isLiveActivityExpanded)
+        (displayedContent?.id != NotchContentRegistry.HomePage.active.id || (notchModel.isLiveActivityExpanded && isHomePageOnLastPage))
     }
     
     var canRestoreWithTrackpadSwipe: Bool {
         guard !isLocked else { return false }
+        guard !notchModel.isLiveActivityExpanded else { return false }
         return settings.isNotchTrackpadSwipeGesturesEnabled &&
         settings.isNotchSwipeRestoreEnabled &&
         canRestoreDismissedContent
