@@ -133,7 +133,7 @@ private struct LockScreenLyricsContentView: View, Equatable {
     
     private func unavailableContent(title: String) -> some View {
         Text(title)
-            .font(.system(size: 38, weight: .bold, design: .rounded))
+            .font(.system(size: 38, weight: .bold, design: .default))
             .foregroundStyle(.white.opacity(0.38))
             .frame(width: width, height: height, alignment: .center)
             .transition(.opacity)
@@ -185,7 +185,7 @@ private struct LockScreenLyricLineView: View {
     
     var body: some View {
         Text(line.text)
-            .font(.system(size: fontSize, weight: .bold, design: .rounded))
+            .font(.system(size: fontSize, weight: .bold, design: .default))
             .foregroundStyle(.white.opacity(lineOpacity))
             .lineLimit(nil)
             .multilineTextAlignment(.leading)
