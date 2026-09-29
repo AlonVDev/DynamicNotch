@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+internal import AppKit
 
 struct LockScreenLyricsView: View {
     @ObservedObject var nowPlayingViewModel: NowPlayingViewModel
@@ -59,8 +60,8 @@ private struct LockScreenLyricsContentView: View, Equatable {
                 LinearGradient(
                     stops: [
                         .init(color: .clear, location: 0),
-                        .init(color: .black, location: 0.16),
-                        .init(color: .black, location: 0.84),
+                        .init(color: .black, location: 0.12),
+                        .init(color: .black, location: 0.88),
                         .init(color: .clear, location: 1)
                     ],
                     startPoint: .top,
@@ -79,8 +80,16 @@ private struct LockScreenLyricsContentView: View, Equatable {
             LockScreenLyricsLoadingView(width: width, height: height)
             
         case .loaded(let lyrics):
-            if lyrics.isSynced {
-                syncedLyricsContent(lyrics)
+            if lyrics.lines.isEmpty {
+                unavailableContent(title: "The lyrics were not found")
+            } else if lyrics.isSynced {
+                LockScreenSyncedLyricsView(
+                    lyrics: lyrics,
+                    activeIndex: activeIndex,
+                    width: width,
+                    height: height,
+                    onSeek: onSeek
+                )
             } else {
                 plainLyricsContent(lyrics)
             }
@@ -93,64 +102,88 @@ private struct LockScreenLyricsContentView: View, Equatable {
         }
     }
     
-    private func syncedLyricsContent(_ lyrics: TrackLyrics) -> some View {
-        let visibleLines = visibleSyncedLines(lyrics.lines, activeIndex: activeIndex)
-        
-        return VStack(alignment: .leading, spacing: 20) {
-            ForEach(visibleLines) { line in
-                LockScreenLyricLineView(
-                    line: line,
-                    distanceFromActive: line.id - activeIndex,
-                    onTap: line.startTime.map { startTime in
-                        {
-                            onSeek(startTime)
-                        }
-                    }
-                )
-                .transition(.opacity)
+    private func plainLyricsContent(_ lyrics: TrackLyrics) -> some View {
+        ScrollView(.vertical, showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 20) {
+                ForEach(lyrics.lines) { line in
+                    Text(line.text)
+                        .font(.system(size: 26, weight: .bold, design: .rounded))
+                        .foregroundStyle(.white.opacity(0.85))
+                        .lineSpacing(6)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
             }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 40)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .id(lyrics.trackKey)
         .frame(width: width, height: height)
-        .animation(.spring(response: 0.4, dampingFraction: 0.88), value: activeIndex)
+        .transition(.opacity)
     }
     
-    private func plainLyricsContent(_ lyrics: TrackLyrics) -> some View {
-        let visibleLines = Array(lyrics.lines.prefix(9))
-        let centerIndex = visibleLines.count / 2
-        
-        return VStack(alignment: .leading, spacing: 16) {
-            ForEach(Array(visibleLines.enumerated()), id: \.element.id) { index, line in
-                LockScreenLyricLineView(
-                    line: line,
-                    distanceFromActive: index - centerIndex,
-                    onTap: nil
-                )
-            }
+    private func unavailableContent(title: String, systemImage: String = "quote.bubble") -> some View {
+        VStack(spacing: 14) {
+            Image(systemName: systemImage)
+                .font(.system(size: 38, weight: .medium))
+                .foregroundStyle(.white.opacity(0.32))
+            
+            Text(title)
+                .font(.system(size: 22, weight: .bold, design: .rounded))
+                .foregroundStyle(.white.opacity(0.42))
+                .multilineTextAlignment(.center)
         }
         .frame(width: width, height: height, alignment: .center)
         .transition(.opacity)
     }
+}
+
+private struct LockScreenSyncedLyricsView: View {
+    let lyrics: TrackLyrics
+    let activeIndex: Int
+    let width: CGFloat
+    let height: CGFloat
+    let onSeek: (TimeInterval) -> Void
     
-    private func unavailableContent(title: String) -> some View {
-        Text(title)
-            .font(.system(size: 38, weight: .bold, design: .default))
-            .foregroundStyle(.white.opacity(0.38))
-            .frame(width: width, height: height, alignment: .center)
-            .transition(.opacity)
-    }
-    
-    private func visibleSyncedLines(_ lines: [LyricLine], activeIndex: Int) -> [LyricLine] {
-        guard lines.isEmpty == false else { return [] }
-        
-        var result: [LyricLine] = []
-        for i in (activeIndex - 4)...(activeIndex + 4) {
-            if i >= 0 && i < lines.count {
-                result.append(lines[i])
-            } else {
-                result.append(LyricLine(id: i, startTime: nil, text: " "))
+    var body: some View {
+        ScrollViewReader { proxy in
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 24) {
+                    ForEach(lyrics.lines) { line in
+                        LockScreenLyricLineView(
+                            line: line,
+                            distanceFromActive: line.id - activeIndex,
+                            onTap: line.startTime.map { startTime in
+                                {
+                                    onSeek(startTime)
+                                    withAnimation(.spring(response: 0.55, dampingFraction: 0.82)) {
+                                        proxy.scrollTo(line.id, anchor: .center)
+                                    }
+                                }
+                            }
+                        )
+                        .id(line.id)
+                    }
+                }
+                .padding(.horizontal, 10)
+                .padding(.vertical, height * 0.42)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .id(lyrics.trackKey)
+            .frame(width: width, height: height)
+            .onChange(of: activeIndex) { _, newIndex in
+                withAnimation(.spring(response: 0.55, dampingFraction: 0.82)) {
+                    proxy.scrollTo(newIndex, anchor: .center)
+                }
+            }
+            .onAppear {
+                DispatchQueue.main.async {
+                    proxy.scrollTo(activeIndex, anchor: .center)
+                }
             }
         }
-        return result
     }
 }
 
@@ -159,53 +192,122 @@ private struct LockScreenLyricLineView: View {
     let distanceFromActive: Int
     let onTap: (() -> Void)?
     
+    @State private var isHovered = false
+    @State private var isPressed = false
+    
     private var isActive: Bool {
         distanceFromActive == 0
     }
     
-    private var clampedDistance: CGFloat {
-        min(CGFloat(abs(distanceFromActive)), 4)
+    private var distance: Int {
+        abs(distanceFromActive)
     }
     
-    private var fontSize: CGFloat {
-        isActive ? 38 : 30
+    private var displayText: String {
+        let trimmed = line.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? "•••" : line.text
+    }
+    
+    private var blurRadius: CGFloat {
+        if isActive {
+            return 0
+        }
+        if isHovered {
+            return 0.4
+        }
+        switch distance {
+        case 1:
+            return 1.4
+        case 2:
+            return 2.2
+        default:
+            return min(3.8, 2.2 + CGFloat(distance - 2) * 0.45)
+        }
     }
     
     private var lineOpacity: Double {
         if isActive {
-            return 0.98
+            return 1.0
         }
-        
-        return max(0.15, 0.45 - (Double(clampedDistance) * 0.07))
+        if isHovered {
+            return 0.85
+        }
+        switch distance {
+        case 1:
+            return 0.52
+        case 2:
+            return 0.36
+        default:
+            return max(0.18, 0.36 - Double(distance - 2) * 0.05)
+        }
     }
     
     private var lineScale: CGFloat {
-        max(0.82, 1 - (clampedDistance * 0.045))
+        if isActive {
+            return 1.0
+        }
+        if isHovered {
+            return 0.985
+        }
+        switch distance {
+        case 1:
+            return 0.965
+        case 2:
+            return 0.945
+        default:
+            return max(0.90, 0.945 - CGFloat(distance - 2) * 0.012)
+        }
     }
     
     var body: some View {
-        Text(line.text)
-            .font(.system(size: fontSize, weight: .bold, design: .default))
-            .foregroundStyle(.white.opacity(lineOpacity))
-            .lineLimit(nil)
+        Text(displayText)
+            .font(.system(size: 32, weight: .bold, design: .rounded))
+            .lineSpacing(6)
+            .foregroundStyle(.white)
+            .opacity(lineOpacity)
+            .blur(radius: blurRadius)
             .multilineTextAlignment(.leading)
             .fixedSize(horizontal: false, vertical: true)
-            .scaleEffect(lineScale, anchor: .leading)
-            .offset(x: isActive ? 0 : 10)
+            .shadow(color: isActive ? .white.opacity(0.18) : .clear, radius: 10, x: 0, y: 0)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .contentTransition(.opacity)
-            .zIndex(Double(10 - clampedDistance))
+            .background(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(Color.white.opacity(isHovered && !isActive ? 0.08 : 0))
+            )
+            .scaleEffect(lineScale * (isPressed ? 0.96 : 1.0), anchor: .leading)
+            .contentShape(Rectangle())
             .onTapGesture {
-                onTap?()
+                guard let onTap = onTap else { return }
+                withAnimation(.spring(response: 0.2, dampingFraction: 0.7)) {
+                    isPressed = true
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                        isPressed = false
+                    }
+                }
+                onTap()
             }
-            .onHover { inside in
+            .onHover { hovering in
                 guard onTap != nil else { return }
-                if inside {
+                isHovered = hovering
+                if hovering {
                     NSCursor.pointingHand.push()
                 } else {
                     NSCursor.pop()
                 }
             }
+            .onDisappear {
+                if isHovered {
+                    NSCursor.pop()
+                    isHovered = false
+                }
+            }
+            .animation(.spring(response: 0.42, dampingFraction: 0.82), value: isActive)
+            .animation(.spring(response: 0.25, dampingFraction: 0.88), value: isHovered)
+            .animation(.spring(response: 0.2, dampingFraction: 0.7), value: isPressed)
     }
 }
 
@@ -213,32 +315,32 @@ private struct LockScreenLyricsLoadingView: View {
     let width: CGFloat
     let height: CGFloat
     
-    @State private var shimmerPhase: CGFloat = -0.5
+    @State private var shimmerPhase: CGFloat = -0.6
     
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
             ForEach(0..<5, id: \.self) { index in
                 let isActive = index == 2
                 
-                RoundedRectangle(cornerRadius: isActive ? 12 : 8, style: .continuous)
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
                     .fill(.white.opacity(isActive ? 0.35 : 0.15))
                     .frame(
-                        width: width * CGFloat([0.65, 0.85, 0.95, 0.75, 0.55][index]),
-                        height: isActive ? 36 : 24
+                        width: width * CGFloat([0.6, 0.85, 0.95, 0.72, 0.5][index]),
+                        height: isActive ? 34 : 26
                     )
             }
         }
         .frame(width: width, height: height, alignment: .center)
         .mask(
             LinearGradient(
-                colors: [.black.opacity(0.3), .black, .black.opacity(0.3)],
+                colors: [.black.opacity(0.25), .black, .black.opacity(0.25)],
                 startPoint: UnitPoint(x: shimmerPhase - 0.5, y: 0.5),
                 endPoint: UnitPoint(x: shimmerPhase + 0.5, y: 0.5)
             )
         )
         .onAppear {
-            withAnimation(.linear(duration: 1.5).repeatForever(autoreverses: false)) {
-                shimmerPhase = 1.5
+            withAnimation(.linear(duration: 1.6).repeatForever(autoreverses: false)) {
+                shimmerPhase = 1.6
             }
         }
     }
