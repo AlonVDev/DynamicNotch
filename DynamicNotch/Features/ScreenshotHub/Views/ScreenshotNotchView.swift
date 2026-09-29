@@ -3,23 +3,42 @@ import SwiftUI
 struct ScreenshotNotchView: View {
     @ObservedObject var screenshotViewModel: ScreenshotViewModel
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
-    @State private var isHovering: Bool = false
     
     var body: some View {
         VStack {
             Spacer()
-            screenshot
-        }
-        .onHover { hovering in
-            withAnimation(.spring(duration: 0.4)) {
-                isHovering = hovering
+            HStack {
+                leftContent
+                Spacer()
+                screenshotPreview
             }
+            .padding(.horizontal, 10)
+            
+            buttons
         }
-        .padding(.horizontal, isNotchlessScreen ? 10 : 36)
+        .padding(.horizontal, isNotchlessScreen ? 14 : 40)
         .padding(.bottom, isNotchlessScreen ? 10 : 10)
     }
     
-    private var screenshot: some View {
+    private var leftContent: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            HStack(spacing: 6) {
+                Image(systemName: "camera.viewfinder")
+                    .font(.system(size: 18))
+                    .foregroundStyle(.gray)
+
+                Text(verbatim: "Screenshot")
+                    .font(.system(size: 16, weight: .regular))
+                    .foregroundColor(.gray)
+            }
+            Text(verbatim: "Saved to \"\(screenshotViewModel.savedLocation)\"")
+                .font(.system(size: 16, weight: .regular))
+                .foregroundColor(.white)
+                .lineLimit(1)
+        }
+    }
+    
+    private var screenshotPreview: some View {
         VStack {
             if let screenshot = screenshotViewModel.activeScreenshot {
                 ZStack(alignment: .topTrailing) {
@@ -27,7 +46,7 @@ struct ScreenshotNotchView: View {
                         screenshotViewModel.openEditingWindow()
                     }) {
                         Color.clear
-                            .frame(height: 145)
+                            .frame(width: 50, height: 50)
                             .overlay(
                                 Image(nsImage: screenshot.image)
                                     .resizable()
@@ -35,7 +54,7 @@ struct ScreenshotNotchView: View {
                                     .antialiased(true)
                                     .scaledToFill()
                             )
-                            .clipShape(RoundedRectangle(cornerRadius: 24))
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
                     .buttonStyle(.plain)
                     .onDrag {
@@ -45,58 +64,26 @@ struct ScreenshotNotchView: View {
                         }
                         return screenshotViewModel.makeItemProvider(for: screenshot)
                     }
-                    
-                    buttons
-                        .blur(radius: isHovering ? 0 : 6)
-                        .opacity(isHovering ? 1 : 0)
-                        .allowsHitTesting(isHovering)
                 }
             }
         }
     }
     
     private var buttons: some View {
-        VStack(spacing: 10) {
-            Button(action: { screenshotViewModel.deleteScreenshot() }) {
-                ZStack {
-                    Circle()
-                        .fill(.thinMaterial)
-                        .stroke(.white.opacity(0.08))
-                        .frame(width: 30, height: 30)
-                    
-                    Image(systemName: "trash.fill")
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundStyle(Color.white)
-                }
-            }
-            
+        HStack {
             Button(action: { screenshotViewModel.copyImageToClipboard() }) {
-                ZStack {
-                    Circle()
-                        .fill(.thinMaterial)
-                        .stroke(.white.opacity(0.08))
-                        .frame(width: 30, height: 30)
-                    
-                    Image(systemName: "document.on.document.fill")
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundStyle(Color.white)
-                }
+                Text(verbatim: "Copy")
+                    .fontWeight(.medium)
+                    .foregroundStyle(.white)
             }
+            .buttonStyle(PrimaryButtonStyle(height: 35, backgroundColor: .gray.opacity(0.25)))
             
-            Button(action: { screenshotViewModel.showInFinder() }) {
-                ZStack {
-                    Circle()
-                        .fill(.thinMaterial)
-                        .stroke(.white.opacity(0.08))
-                        .frame(width: 30, height: 30)
-                    
-                    Image(systemName: "folder.fill")
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundStyle(Color.white)
-                }
+            Button(action: { screenshotViewModel.deleteScreenshot() }) {
+                Text(verbatim: "Delete")
+                    .fontWeight(.medium)
+                    .foregroundStyle(.red)
             }
+            .buttonStyle(PrimaryButtonStyle(height: 35, backgroundColor: .red.opacity(0.25)))
         }
-        .padding(8)
-        .buttonStyle(.plain)
     }
 }

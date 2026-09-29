@@ -5,14 +5,14 @@ struct HomePagePageIndicatorView: View {
     @ObservedObject var notchViewModel: NotchViewModel
     @ObservedObject var settingsViewModel: SettingsViewModel
     
-    private var isNotchlessScreen: Bool {
-        notchViewModel.isDynamicIsland
-    }
-    
     @State private var isHovering = false
     @State private var hoveredPage: HomePages? = nil
     @State private var isPressed = false
     @State private var isIndicatorVisible = false
+    
+    private var isNotchlessScreen: Bool {
+        notchViewModel.isDynamicIsland
+    }
 
     var body: some View {
         Group {

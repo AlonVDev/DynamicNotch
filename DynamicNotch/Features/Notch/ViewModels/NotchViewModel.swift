@@ -16,6 +16,7 @@ final class NotchViewModel: ObservableObject {
     
     @Published var isLocked = false
     @Published var isHoveringScrollableContent = false
+    @Published var isHomePageOnLastPage = false
     @Published var showNotch = false
     @Published var isPressed = false
     @Published var cachedStrokeColor: Color = .clear
@@ -23,6 +24,9 @@ final class NotchViewModel: ObservableObject {
     
     @Published var focusCloseStretchWidth: CGFloat = 0.0
     @Published var focusCloseStretchHeight: CGFloat = 0.0
+    
+    @Published var notchPulseWidth: CGFloat = 0.0
+    @Published var notchPulseHeight: CGFloat = 0.0
 
     private let settings: NotchSettingsProviding
     private let engine: NotchEngine
@@ -31,6 +35,7 @@ final class NotchViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private var expansionTransitionTask: Task<Void, Never>?
     private var swipeStretchResetWorkItem: DispatchWorkItem?
+    private var notchPulseResetWorkItem: DispatchWorkItem?
     private var isClosingHeightStaged = false
     private var isFocusCloseAnimating = false
 
@@ -140,11 +145,12 @@ final class NotchViewModel: ObservableObject {
         settings.isNotchSwipeDismissEnabled &&
         (!isActivityPresentationHidden || isLocked || notchModel.temporaryNotificationContent != nil) &&
         displayedContent != nil &&
-        (displayedContent?.id != NotchContentRegistry.HomePage.active.id || notchModel.isLiveActivityExpanded)
+        (displayedContent?.id != NotchContentRegistry.HomePage.active.id || (notchModel.isLiveActivityExpanded && isHomePageOnLastPage))
     }
     
     var canRestoreWithMouseDrag: Bool {
         guard !isLocked else { return false }
+        guard !notchModel.isLiveActivityExpanded else { return false }
         return settings.isNotchMouseDragGesturesEnabled &&
         settings.isNotchSwipeRestoreEnabled &&
         canRestoreDismissedContent
@@ -155,11 +161,12 @@ final class NotchViewModel: ObservableObject {
         settings.isNotchSwipeDismissEnabled &&
         (!isActivityPresentationHidden || isLocked || notchModel.temporaryNotificationContent != nil) &&
         displayedContent != nil &&
-        (displayedContent?.id != NotchContentRegistry.HomePage.active.id || notchModel.isLiveActivityExpanded)
+        (displayedContent?.id != NotchContentRegistry.HomePage.active.id || (notchModel.isLiveActivityExpanded && isHomePageOnLastPage))
     }
     
     var canRestoreWithTrackpadSwipe: Bool {
         guard !isLocked else { return false }
+        guard !notchModel.isLiveActivityExpanded else { return false }
         return settings.isNotchTrackpadSwipeGesturesEnabled &&
         settings.isNotchSwipeRestoreEnabled &&
         canRestoreDismissedContent
@@ -210,15 +217,15 @@ final class NotchViewModel: ObservableObject {
         }
 
         return CGSize(
-            width: calculatedSize.width + focusCloseStretchWidth,
-            height: calculatedSize.height + focusCloseStretchHeight
+            width: calculatedSize.width + focusCloseStretchWidth + notchPulseWidth,
+            height: calculatedSize.height + focusCloseStretchHeight + notchPulseHeight
         )
     }
     
     var interactiveCornerRadius: (top: CGFloat, bottom: CGFloat) {
         let model = displayedNotchModel
         let baseCornerRadius = model.cornerRadius
-        let radiusOffset = focusCloseStretchHeight * 0.3
+        let radiusOffset = (focusCloseStretchHeight + notchPulseHeight) * 0.3
         
         return (
             top: baseCornerRadius.top + radiusOffset,
@@ -441,6 +448,24 @@ final class NotchViewModel: ObservableObject {
                 self.isFocusCloseAnimating = false
             }
         }
+    }
+    
+    func pulseNotch(widthOffset: CGFloat = 30.0, heightOffset: CGFloat = 10.0) {
+        notchPulseResetWorkItem?.cancel()
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.55, blendDuration: 0)) {
+            self.notchPulseWidth = widthOffset
+            self.notchPulseHeight = heightOffset
+        }
+        
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.65, blendDuration: 0)) {
+                self.notchPulseWidth = 0
+                self.notchPulseHeight = 0
+            }
+        }
+        notchPulseResetWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12, execute: workItem)
     }
     
     func updateSwipeStretch(for interaction: SwipeInteraction, progress: CGFloat) {

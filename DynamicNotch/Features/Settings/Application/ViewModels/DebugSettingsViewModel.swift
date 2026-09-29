@@ -115,11 +115,22 @@ final class DebugSettingsViewModel: ObservableObject {
 
     func triggerVPNPreview() {
         applyVPNPreviewState()
+        UserDefaults.standard.set(false, forKey: "debug.vpn.mockThreeDigitTimer")
+        NotificationCenter.default.post(name: NSNotification.Name("debug.vpn.mockChanged"), object: nil)
+        notchEventCoordinator.handleVpnEvent(.vpnConnected)
+    }
+
+    func triggerVPNLongTimerPreview() {
+        applyVPNLongTimerPreviewState()
+        UserDefaults.standard.set(true, forKey: "debug.vpn.mockThreeDigitTimer")
+        NotificationCenter.default.post(name: NSNotification.Name("debug.vpn.mockChanged"), object: nil)
         notchEventCoordinator.handleVpnEvent(.vpnConnected)
     }
 
     func triggerVPNDisconnectedPreview() {
         applyVPNDisconnectedPreviewState()
+        UserDefaults.standard.set(false, forKey: "debug.vpn.mockThreeDigitTimer")
+        NotificationCenter.default.post(name: NSNotification.Name("debug.vpn.mockChanged"), object: nil)
         notchEventCoordinator.handleVpnEvent(.vpnDisconnected)
     }
 
@@ -306,6 +317,8 @@ final class DebugSettingsViewModel: ObservableObject {
         isLockScreenPreviewEnabled = false
         hideDragAndDropTargetPreviews()
         notchViewModel.hideTemporaryNotification()
+        UserDefaults.standard.set(false, forKey: "debug.vpn.mockThreeDigitTimer")
+        NotificationCenter.default.post(name: NSNotification.Name("debug.vpn.mockChanged"), object: nil)
     }
 
     private func setupPreviewBindings() {
@@ -1028,6 +1041,12 @@ final class DebugSettingsViewModel: ObservableObject {
         vpnViewModel.vpnConnected = true
         vpnViewModel.vpnName = "WireGuard Tunnel"
         vpnViewModel.vpnConnectedAt = .now.addingTimeInterval(-513)
+    }
+
+    private func applyVPNLongTimerPreviewState() {
+        vpnViewModel.vpnConnected = true
+        vpnViewModel.vpnName = "WireGuard Tunnel"
+        vpnViewModel.vpnConnectedAt = .now.addingTimeInterval(-6120)
     }
 
     private func applyVPNDisconnectedPreviewState() {
