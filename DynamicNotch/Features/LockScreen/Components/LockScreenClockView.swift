@@ -17,12 +17,11 @@ struct LockScreenClockView: View {
             Spacer()
             
             Text(timeString)
-                .font(.system(size: 38, weight: .semibold, design: .rounded))
-                .monospacedDigit()
+                .font(.system(size: 38, weight: .heavy, design: .default))
                 .foregroundStyle(.white)
             
             Text(dateString)
-                .font(.system(size: 38, weight: .semibold))
+                .font(.system(size: 38, weight: .semibold, design: .default))
                 .foregroundStyle(.white.opacity(0.8))
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
