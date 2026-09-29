@@ -107,14 +107,12 @@ final class ScreenshotViewModel: ObservableObject {
     func copyImageToClipboard() {
         guard let image = activeScreenshot?.image else { return }
         isCopied = true
-        monitorService.suppressMonitoring(for: 3.0)
         
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
         if let tiffData = image.tiffRepresentation {
             pasteboard.setData(tiffData, forType: .tiff)
         }
-        monitorService.updateLastPasteboardChangeCount()
         dismiss()
     }
     
@@ -219,7 +217,6 @@ final class ScreenshotViewModel: ObservableObject {
     }
     
     func dismiss() {
-        monitorService.suppressMonitoring(for: 3.0)
         onScreenshotDismissed?()
         
         saveToDiskIfNeeded()
@@ -246,7 +243,6 @@ final class ScreenshotViewModel: ObservableObject {
         
         let finalTargetURL = uniqueURL(for: targetURL)
         monitorService.markPathAsKnown(finalTargetURL.path)
-        monitorService.suppressMonitoring(for: 3.0)
         
         isSavedToDisk = true
         if var current = activeScreenshot {

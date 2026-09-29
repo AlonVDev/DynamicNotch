@@ -141,8 +141,6 @@ struct HUDSettingsView: View {
                 selection: layoutTypeBinding
             )
 
-            Divider().opacity(0.6)
-
             if layoutTypeBinding.wrappedValue == .compact {
                 CustomPicker(
                     selection: $settings.hudStyle,

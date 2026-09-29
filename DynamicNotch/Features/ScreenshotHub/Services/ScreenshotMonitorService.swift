@@ -11,16 +11,11 @@ final class ScreenshotMonitorService {
     
     private var originalScreenshotLocation: String?
     private var fileWatcherTimer: Timer?
-    private var pasteboardTimer: Timer?
-    private var lastPasteboardChangeCount: Int = 0
     private var knownFilePaths = Set<String>()
     private var isMonitoring = false
-    private var suppressMonitoringUntil: Date?
     private let fileManager = FileManager.default
     
-    init() {
-        lastPasteboardChangeCount = NSPasteboard.general.changeCount
-    }
+    init() {}
     
     deinit {
         stopMonitoring()
@@ -48,10 +43,6 @@ final class ScreenshotMonitorService {
             self?.scanForNewScreenshots()
             self?.scanTargetDirectoryForRecordings()
         }
-        
-        pasteboardTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] _ in
-            self?.checkPasteboard()
-        }
     }
     
     func stopMonitoring() {
@@ -59,20 +50,13 @@ final class ScreenshotMonitorService {
         isMonitoring = false
         fileWatcherTimer?.invalidate()
         fileWatcherTimer = nil
-        pasteboardTimer?.invalidate()
-        pasteboardTimer = nil
         
         Self.setSystemScreenshotLocation(originalScreenshotLocation)
     }
     
-    func updateLastPasteboardChangeCount() {
-        lastPasteboardChangeCount = NSPasteboard.general.changeCount
-    }
+    func updateLastPasteboardChangeCount() {}
     
-    func suppressMonitoring(for duration: TimeInterval = 3.0) {
-        suppressMonitoringUntil = Date().addingTimeInterval(duration)
-        updateLastPasteboardChangeCount()
-    }
+    func suppressMonitoring(for duration: TimeInterval = 3.0) {}
     
     func rawStagingDirectoryURL() -> URL {
         let caches = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first ?? fileManager.temporaryDirectory
@@ -192,8 +176,6 @@ final class ScreenshotMonitorService {
             if lower.contains("screenshot") || lower.contains("скриншот") || lower.hasSuffix(".png") || lower.hasSuffix(".jpg") {
                 if let image = NSImage(contentsOf: url) {
                     knownFilePaths.insert(path)
-                    updateLastPasteboardChangeCount()
-                    suppressMonitoring(for: 1.5)
                     DispatchQueue.main.async { [weak self] in
                         self?.onScreenshotCaptured?(image, url, filename)
                     }
@@ -267,27 +249,6 @@ final class ScreenshotMonitorService {
         }
 
         return nil
-    }
-    
-    private func checkPasteboard() {
-        if let suppressUntil = suppressMonitoringUntil, Date() < suppressUntil {
-            updateLastPasteboardChangeCount()
-            return
-        }
-        
-        let currentCount = NSPasteboard.general.changeCount
-        guard currentCount != lastPasteboardChangeCount else { return }
-        lastPasteboardChangeCount = currentCount
-        
-        let pb = NSPasteboard.general
-        if let types = pb.types, types.contains(.tiff) || types.contains(.png) {
-            if let data = pb.data(forType: .tiff) ?? pb.data(forType: .png),
-               let image = NSImage(data: data) {
-                DispatchQueue.main.async { [weak self] in
-                    self?.onScreenshotCaptured?(image, nil, "Clipboard Screenshot")
-                }
-            }
-        }
     }
     
     func markPathAsKnown(_ path: String) {
