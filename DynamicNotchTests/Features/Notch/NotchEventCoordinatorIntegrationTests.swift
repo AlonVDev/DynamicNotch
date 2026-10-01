@@ -631,7 +631,7 @@ private extension NotchEventCoordinatorIntegrationTests {
         let nowPlayingViewModel = NowPlayingViewModel(service: nowPlayingService)
         let airDropViewModel = AirDropNotchViewModel()
         let fileTrayViewModel = FileTrayViewModel()
-        let timerViewModel = TimerViewModel(monitor: ClockTimerMonitor())
+        let timerViewModel = TimerViewModel(monitor: InactiveClockTimerMonitor())
         let lockScreenManager = LockScreenManager(
             service: lockScreenService,
             unlockCollapseDelay: 0.05,
@@ -649,7 +649,7 @@ private extension NotchEventCoordinatorIntegrationTests {
         let calendarViewModel = CalendarViewModel()
         let coordinator = NotchEventCoordinator(
             notchViewModel: notchViewModel,
-            bluetoothViewModel: BluetoothViewModel(),
+            bluetoothViewModel: BluetoothViewModel(bluetoothService: InactiveBluetoothService()),
             powerService: PowerService(startMonitoring: false),
             wifiViewModel: wifiViewModel,
             vpnViewModel: vpnViewModel,

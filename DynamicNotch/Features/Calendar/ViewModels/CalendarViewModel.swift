@@ -21,6 +21,7 @@ final class CalendarViewModel: ObservableObject {
     }
     
     func requestAccess() {
+        guard !AppEnvironment.isRunningTests else { return }
         if #available(macOS 14.0, *) {
             eventStore.requestFullAccessToEvents { [weak self] granted, error in
                 DispatchQueue.main.async {

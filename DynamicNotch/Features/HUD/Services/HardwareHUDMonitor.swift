@@ -55,6 +55,8 @@ final class HardwareHUDMonitor {
     }
 
     func startMonitoring() {
+        guard !AppEnvironment.isRunningTests else { return }
+
         // The CoreAudio observer needs no accessibility permission, so start it
         // regardless of whether the media-key tap succeeds.
         updateAudioChangeObservation()

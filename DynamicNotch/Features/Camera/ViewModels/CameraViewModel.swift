@@ -43,6 +43,13 @@ final class CameraViewModel: ObservableObject {
     }
     
     func checkPermissions() {
+        guard !AppEnvironment.isRunningTests else {
+            DispatchQueue.main.async {
+                self.cameraState = .unavailable
+            }
+            return
+        }
+
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
             setupCamera()
