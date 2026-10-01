@@ -225,6 +225,7 @@ final class NotchEventCoordinator: ObservableObject {
             homePageHandler: homePageHandler,
             localTimerHandler: localTimerHandler,
             lockScreenHandler: lockScreenHandler,
+            focusHandler: focusHandler,
             onLanguageChanged: { [weak self] language in
                 self?.showLanguageChangedNotification(for: language)
             }

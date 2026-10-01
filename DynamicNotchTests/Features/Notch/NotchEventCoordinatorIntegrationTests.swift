@@ -63,6 +63,51 @@ final class NotchEventCoordinatorIntegrationTests: XCTestCase {
         }
     }
 
+    func testFocusOnWithAutoHideShowsTemporaryNotificationAndDismisses() async {
+        let context = makeContext(
+            temporaryActivityDurationScale: 0.2,
+            focusOnAutoHideEnabled: true
+        )
+
+        context.coordinator.handleFocusEvent(.FocusOn(.sleep))
+
+        await assertEventually {
+            await MainActor.run {
+                context.notchViewModel.notchModel.temporaryNotificationContent?.id == NotchContentRegistry.Focus.active.id &&
+                context.notchViewModel.notchModel.liveActivityContent == nil
+            }
+        }
+
+        await assertEventually(timeout: 1.5) {
+            await MainActor.run {
+                context.notchViewModel.notchModel.temporaryNotificationContent == nil &&
+                context.notchViewModel.notchModel.liveActivityContent == nil
+            }
+        }
+    }
+
+    func testTogglingFocusAutoHideHidesExistingLiveActivity() async {
+        let context = makeContext(focusOnAutoHideEnabled: false)
+
+        context.coordinator.handleFocusEvent(.FocusOn(.sleep))
+
+        await assertEventually {
+            await MainActor.run {
+                context.notchViewModel.notchModel.liveActivityContent?.id == NotchContentRegistry.Focus.active.id
+            }
+        }
+
+        await MainActor.run {
+            context.settingsViewModel.connectivity.isFocusOnAutoHideEnabled = true
+        }
+
+        await assertEventually {
+            await MainActor.run {
+                context.notchViewModel.notchModel.liveActivityContent == nil
+            }
+        }
+    }
+
     func testHotspotEventsShowAndHideLiveActivity() async {
         let context = makeContext()
 
@@ -582,7 +627,8 @@ private extension NotchEventCoordinatorIntegrationTests {
         dragAndDropActivityMode: DragAndDropActivityMode = .airDrop,
         trayLiveActivityEnabled: Bool = true,
         noInternetTemporaryActivityEnabled: Bool = true,
-        homePageLiveActivityEnabled: Bool = false
+        homePageLiveActivityEnabled: Bool = false,
+        focusOnAutoHideEnabled: Bool = false
     ) -> TestContext {
         UserDefaults.standard.set(false, forKey: "isLaunchAtLoginEnabled")
         UserDefaults.standard.set(0, forKey: "notchWidth")
@@ -594,7 +640,7 @@ private extension NotchEventCoordinatorIntegrationTests {
         UserDefaults.standard.set(temporaryActivityDurationScale, forKey: "settings.temporary.durationScale")
         UserDefaults.standard.set(true, forKey: "settings.live.hotspot")
         UserDefaults.standard.set(true, forKey: "settings.live.focus")
-        UserDefaults.standard.set(false, forKey: "settings.live.focus.autoHide")
+        UserDefaults.standard.set(focusOnAutoHideEnabled, forKey: "settings.live.focus.autoHide")
         UserDefaults.standard.set(true, forKey: "settings.live.nowPlaying")
         UserDefaults.standard.set(nowPlayingPauseHideTimerEnabled, forKey: "settings.nowPlaying.pauseHideTimerEnabled")
         UserDefaults.standard.set(nowPlayingPauseHideDelay, forKey: "settings.nowPlaying.pauseHideDelay")
@@ -611,7 +657,6 @@ private extension NotchEventCoordinatorIntegrationTests {
         UserDefaults.standard.set(true, forKey: "settings.temporary.wifi")
         UserDefaults.standard.set(true, forKey: "settings.temporary.vpn")
         UserDefaults.standard.set(noInternetTemporaryActivityEnabled, forKey: "settings.temporary.noInternet")
-        UserDefaults.standard.set(false, forKey: "settings.temporary.focusOn")
         UserDefaults.standard.set(true, forKey: "settings.temporary.focusOff")
         UserDefaults.standard.set(true, forKey: "settings.temporary.notchSize")
         UserDefaults.standard.set(homePageLiveActivityEnabled, forKey: "settings.homePage.liveActivity")

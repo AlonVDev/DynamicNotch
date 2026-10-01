@@ -28,6 +28,7 @@ final class NotchFocusEventsHandler {
             if settingsViewModel.isTemporaryActivityEnabled(.focusOn) {
                 guard lastShownFocusMode != modeType else { return }
                 lastShownFocusMode = modeType
+                notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.Focus.active.id))
                 notchViewModel.send(.showTemporaryNotification(content, duration: settingsViewModel.temporaryActivityDuration(for: .focusOn)))
             } else {
                 lastShownFocusMode = modeType

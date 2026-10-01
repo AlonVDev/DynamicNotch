@@ -25,6 +25,7 @@ final class NotchSettingsObserver {
     private let homePageHandler: NotchHomePageEventsHandler
     private let localTimerHandler: NotchLocalTimerEventsHandler
     private let lockScreenHandler: NotchLockScreenEventsHandler
+    private let focusHandler: NotchFocusEventsHandler
     private let onLanguageChanged: (DynamicNotchLanguage) -> Void
     private var cancellables = Set<AnyCancellable>()
 
@@ -46,6 +47,7 @@ final class NotchSettingsObserver {
         homePageHandler: NotchHomePageEventsHandler,
         localTimerHandler: NotchLocalTimerEventsHandler,
         lockScreenHandler: NotchLockScreenEventsHandler,
+        focusHandler: NotchFocusEventsHandler,
         onLanguageChanged: @escaping (DynamicNotchLanguage) -> Void
     ) {
         self.settingsViewModel = settingsViewModel
@@ -65,6 +67,7 @@ final class NotchSettingsObserver {
         self.homePageHandler = homePageHandler
         self.localTimerHandler = localTimerHandler
         self.lockScreenHandler = lockScreenHandler
+        self.focusHandler = focusHandler
         self.onLanguageChanged = onLanguageChanged
 
         startObserving()
@@ -82,9 +85,52 @@ final class NotchSettingsObserver {
         settingsViewModel.connectivity.$isFocusLiveActivityEnabled
             .removeDuplicates()
             .sink { [weak self] isEnabled in
-                if isEnabled == false {
-                    self?.notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.Focus.active.id))
+                guard let self else { return }
+                if isEnabled {
+                    if DoNotDisturbManager.shared.isDoNotDisturbActive && !self.settingsViewModel.isTemporaryActivityEnabled(.focusOn) {
+                        let modeType = FocusModeType.resolve(
+                            identifier: DoNotDisturbManager.shared.currentFocusModeIdentifier,
+                            name: DoNotDisturbManager.shared.currentFocusModeName
+                        )
+                        self.focusHandler.handleFocus(.FocusOn(modeType))
+                    }
+                } else {
+                    self.notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.Focus.active.id))
                 }
+            }
+            .store(in: &cancellables)
+
+        settingsViewModel.connectivity.$isFocusOnAutoHideEnabled
+            .removeDuplicates()
+            .sink { [weak self] isAutoHide in
+                guard let self else { return }
+                if isAutoHide {
+                    self.notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.Focus.active.id))
+                } else {
+                    if self.settingsViewModel.isLiveActivityEnabled(.focus) && DoNotDisturbManager.shared.isDoNotDisturbActive {
+                        let modeType = FocusModeType.resolve(
+                            identifier: DoNotDisturbManager.shared.currentFocusModeIdentifier,
+                            name: DoNotDisturbManager.shared.currentFocusModeName
+                        )
+                        self.focusHandler.handleFocus(.FocusOn(modeType))
+                    }
+                }
+            }
+            .store(in: &cancellables)
+
+        settingsViewModel.connectivity.$focusAppearanceStyle
+            .removeDuplicates()
+            .sink { [weak self] _ in
+                guard let self else { return }
+                guard self.settingsViewModel.isLiveActivityEnabled(.focus) else { return }
+                guard !self.settingsViewModel.isTemporaryActivityEnabled(.focusOn) else { return }
+                guard DoNotDisturbManager.shared.isDoNotDisturbActive else { return }
+
+                let modeType = FocusModeType.resolve(
+                    identifier: DoNotDisturbManager.shared.currentFocusModeIdentifier,
+                    name: DoNotDisturbManager.shared.currentFocusModeName
+                )
+                self.focusHandler.handleFocus(.FocusOn(modeType))
             }
             .store(in: &cancellables)
 

@@ -1,6 +1,7 @@
 import XCTest
 @testable import DynamicNotch
 
+@MainActor
 final class AppEnvironmentTests: XCTestCase {
     func testAppEnvironmentDetectsRunningInTestEnvironment() {
         XCTAssertTrue(AppEnvironment.isRunningTests)
