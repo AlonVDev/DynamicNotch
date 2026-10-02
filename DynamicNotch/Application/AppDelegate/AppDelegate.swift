@@ -43,13 +43,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     var expansionTime: Date = .distantPast
     
     override init() {
-        let isRunningUITests = ProcessInfo.processInfo.arguments.contains("-ui-testing")
+        let isRunningUITests = AppEnvironment.isRunningUITests
+        let isRunningTests = AppEnvironment.isRunningTests
         self.isRunningUITests = isRunningUITests
-        self.container = AppContainer(isRunningUITests: isRunningUITests)
+        self.container = AppContainer(isRunningTests: isRunningTests)
         super.init()
     }
     
     func applicationDidFinishLaunching(_ notification: Notification) {
+        guard !AppEnvironment.isRunningUnitTests else {
+            // Running as test host for unit tests: do not start UI, windows, monitors, or permission prompts.
+            return
+        }
+
         applyActivationPolicy(
             showsDockIcon: isRunningUITests || settingsViewModel.application.isDockIconVisible
         )

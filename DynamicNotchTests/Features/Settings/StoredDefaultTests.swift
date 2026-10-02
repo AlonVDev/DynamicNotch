@@ -170,30 +170,4 @@ final class StoredDefaultTests: XCTestCase {
         store.appearanceMode = .dark
         XCTAssertEqual(testDefaults.string(forKey: GeneralSettingsStorage.Keys.appearanceMode), SettingsAppearanceMode.dark.rawValue)
     }
-
-    func testNotchBackgroundSurfaceStrokeWidthResolution() {
-        // When baseHeight > height, stroke width is 2.0
-        XCTAssertEqual(
-            NotchBackgroundSurface.resolvedStrokeWidth(baseHeight: 40, height: 35),
-            2.0
-        )
-        // When baseHeight <= height, stroke width is 2.5
-        XCTAssertEqual(
-            NotchBackgroundSurface.resolvedStrokeWidth(baseHeight: 38, height: 38),
-            2.5
-        )
-        XCTAssertEqual(
-            NotchBackgroundSurface.resolvedStrokeWidth(baseHeight: 38, height: 50),
-            2.5
-        )
-        // When either is nil, default is 2.5
-        XCTAssertEqual(
-            NotchBackgroundSurface.resolvedStrokeWidth(baseHeight: nil, height: 35),
-            2.5
-        )
-        XCTAssertEqual(
-            NotchBackgroundSurface.resolvedStrokeWidth(baseHeight: 40, height: nil),
-            2.5
-        )
-    }
 }

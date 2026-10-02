@@ -3,7 +3,7 @@ import Foundation
 @MainActor
 final class AppContainer {
     let powerService = PowerService()
-    let bluetoothViewModel = BluetoothViewModel()
+    let bluetoothViewModel: BluetoothViewModel
     let focusViewModel = FocusViewModel()
     let airDropViewModel = AirDropNotchViewModel()
     let fileTrayViewModel = FileTrayViewModel()
@@ -61,7 +61,8 @@ final class AppContainer {
         airDropController: airDropController
     )
 
-    init(isRunningUITests: Bool = ProcessInfo.processInfo.arguments.contains("-ui-testing")) {
+    init(isRunningTests: Bool? = nil) {
+        let isRunningTests = isRunningTests ?? AppEnvironment.isRunningTests
         self.settingsViewModel = SettingsViewModel()
         self.wifiViewModel = WifiViewModel(settings: settingsViewModel.connectivity)
         self.vpnViewModel = VpnViewModel(settings: settingsViewModel.connectivity)
@@ -69,42 +70,47 @@ final class AppContainer {
             powerService: powerService,
             batterySettings: settingsViewModel.battery
         )
+        self.bluetoothViewModel = BluetoothViewModel(
+            bluetoothService: isRunningTests ?
+                InactiveBluetoothService() :
+                BluetoothService.shared
+        )
         self.nowPlayingViewModel = NowPlayingViewModel(
-            service: isRunningUITests ?
+            service: isRunningTests ?
                 InactiveNowPlayingService() :
                 MediaRemoteNowPlayingService(),
-            audioOutputRouting: isRunningUITests ?
+            audioOutputRouting: isRunningTests ?
                 InactiveAudioOutputRoutingService() :
                 SystemAudioOutputRoutingService(),
-            lyricsProvider: isRunningUITests ?
+            lyricsProvider: isRunningTests ?
                 InactiveLyricsProvider() :
                 LRCLIBLyricsProvider(),
             sourceFilter: settingsViewModel.mediaAndFiles.nowPlayingSourceFilter
         )
         self.downloadViewModel = DownloadViewModel(
-            monitor: isRunningUITests ?
+            monitor: isRunningTests ?
                 InactiveDownloadMonitor() :
                 FolderFileDownloadMonitor()
         )
-        self.clockTimerController = isRunningUITests ?
+        self.clockTimerController = isRunningTests ?
             InactiveClockTimerController() :
             ClockTimerController()
         self.timerViewModel = TimerViewModel(
-            monitor: isRunningUITests ?
+            monitor: isRunningTests ?
                 InactiveClockTimerMonitor() :
                 ClockTimerMonitor(),
             controller: clockTimerController
         )
         self.screenRecordingViewModel = ScreenRecordingViewModel(
-            monitor: isRunningUITests ?
+            monitor: isRunningTests ?
                 InactiveScreenRecordingMonitor() :
                 SystemScreenRecordingMonitor()
         )
         self.lockScreenManager = LockScreenManager(
-            service: isRunningUITests ?
+            service: isRunningTests ?
                 InactiveLockScreenMonitoringService() :
                 DistributedLockScreenMonitoringService(),
-            soundPlayer: isRunningUITests ?
+            soundPlayer: isRunningTests ?
                 InactiveLockScreenSoundPlayer() :
                 LockScreenSoundPlayer()
         )

@@ -278,6 +278,7 @@ final class SettingsPermissionController: NSObject, ObservableObject, CBCentralM
     }
 
     private func requestAccessibilityAccess() {
+        guard !AppEnvironment.isRunningTests else { return }
         guard !Self.currentAccessibilityTrustState() else {
             refresh()
             return
@@ -299,6 +300,7 @@ final class SettingsPermissionController: NSObject, ObservableObject, CBCentralM
     }
 
     private func requestPostEventAccess() {
+        guard !AppEnvironment.isRunningTests else { return }
         guard !Self.currentPostEventAccessState() else {
             refresh()
             return
@@ -397,6 +399,7 @@ final class SettingsPermissionController: NSObject, ObservableObject, CBCentralM
     }
 
     private func requestCameraAccess() {
+        guard !AppEnvironment.isRunningTests else { return }
         switch cameraAuthorization {
         case .authorized:
             refresh()
@@ -413,8 +416,8 @@ final class SettingsPermissionController: NSObject, ObservableObject, CBCentralM
         }
     }
 
-
     private func requestCalendarAccess() {
+        guard !AppEnvironment.isRunningTests else { return }
         switch calendarAuthorization {
         case .fullAccess, .writeOnly:
             refresh()
@@ -441,6 +444,7 @@ final class SettingsPermissionController: NSObject, ObservableObject, CBCentralM
     }
 
     private func requestBluetoothAccess() {
+        guard !AppEnvironment.isRunningTests else { return }
         switch Self.currentBluetoothAuthorizationStatus() {
         case .allowedAlways:
             refresh()
@@ -494,14 +498,16 @@ final class SettingsPermissionController: NSObject, ObservableObject, CBCentralM
     }
 
     private static func currentPostEventAccessState() -> Bool {
+        guard !AppEnvironment.isRunningTests else { return false }
         #if canImport(ApplicationServices)
-        CGPreflightPostEventAccess()
+        return CGPreflightPostEventAccess()
         #else
         true
         #endif
     }
 
     private func requestAutomationAccess() {
+        guard !AppEnvironment.isRunningTests else { return }
         guard !Self.currentAutomationAccessState() else {
             refresh()
             return
@@ -527,6 +533,7 @@ final class SettingsPermissionController: NSObject, ObservableObject, CBCentralM
     }
 
     private static func currentAutomationAccessState() -> Bool {
+        guard !AppEnvironment.isRunningTests else { return false }
         let script = "tell application \"System Events\" to get name"
         if let appleScript = NSAppleScript(source: script) {
             var error: NSDictionary?

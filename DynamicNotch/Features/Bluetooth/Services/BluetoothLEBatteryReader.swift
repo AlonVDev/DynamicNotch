@@ -31,7 +31,7 @@ final class BluetoothLEBatteryReader: NSObject, CBCentralManagerDelegate, CBPeri
 
     private let timeoutInterval: TimeInterval = 4.0
 
-    private var central: CBCentralManager!
+    private var central: CBCentralManager?
     private var state: State = .idle
     private var pendingLookups: [Lookup] = []
     private var lookupByUUID: [UUID: Lookup] = [:]
@@ -43,10 +43,20 @@ final class BluetoothLEBatteryReader: NSObject, CBCentralManagerDelegate, CBPeri
 
     override init() {
         super.init()
-        central = CBCentralManager(delegate: self, queue: nil)
+        guard !AppEnvironment.isRunningTests else { return }
+        central = CBCentralManager(
+            delegate: self,
+            queue: nil,
+            options: [CBCentralManagerOptionShowPowerAlertKey: false]
+        )
     }
 
     func fetchBatteryLevels(for lookups: [Lookup], completion: @escaping ([Result]) -> Void) {
+        guard let central else {
+            completion([])
+            return
+        }
+
         guard !lookups.isEmpty else {
             completion([])
             return
@@ -210,6 +220,11 @@ final class BluetoothLEBatteryReader: NSObject, CBCentralManagerDelegate, CBPeri
     }
 
     private func startRequest() {
+        guard let central else {
+            complete(with: [])
+            return
+        }
+
         central.stopScan()
 
         let identifiers = Array(missingUUIDs)
@@ -258,7 +273,7 @@ final class BluetoothLEBatteryReader: NSObject, CBCentralManagerDelegate, CBPeri
         case .connected:
             peripheral.discoverServices([Self.batteryServiceUUID])
         default:
-            central.connect(peripheral, options: nil)
+            central?.connect(peripheral, options: nil)
         }
     }
 
@@ -267,7 +282,7 @@ final class BluetoothLEBatteryReader: NSObject, CBCentralManagerDelegate, CBPeri
         missingUUIDs.remove(identifier)
 
         if missingUUIDs.isEmpty && !hasNameLookups() {
-            central.stopScan()
+            central?.stopScan()
         }
 
         if pendingPeripherals.isEmpty && missingUUIDs.isEmpty {
@@ -293,7 +308,7 @@ final class BluetoothLEBatteryReader: NSObject, CBCentralManagerDelegate, CBPeri
     private func complete(with results: [Result]) {
         guard state == .requesting else { return }
         cancelTimeout()
-        central.stopScan()
+        central?.stopScan()
         state = .idle
 
         pendingPeripherals.removeAll()

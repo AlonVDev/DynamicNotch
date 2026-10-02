@@ -271,6 +271,10 @@ private extension SystemMediaKeyTap {
     }
 
     func requestAccessibilityPermissionIfNeeded() {
+        guard !AppEnvironment.isRunningTests else {
+            return
+        }
+
         guard !AXIsProcessTrusted(), !hasRequestedAccessibilityPrompt else {
             return
         }
