@@ -105,7 +105,7 @@ final class ApplicationSettingsStore: SettingsStoreBase, NotchSettingsProviding 
     @StoredDefault(key: GeneralSettingsStorage.Keys.appLanguage, defaultValue: .system)
     var appLanguage: DynamicNotchLanguage
 
-    @StoredDefault(key: GeneralSettingsStorage.Keys.hideNotchInFullscreenEnabled, defaultValue: false)
+    @StoredDefault(key: GeneralSettingsStorage.Keys.hideNotchInFullscreenEnabled, defaultValue: true)
     var isNotchHiddenInFullscreenEnabled: Bool
 
     @StoredDefault(key: GeneralSettingsStorage.Keys.hideDynamicIslandInFullscreenEnabled, defaultValue: true)

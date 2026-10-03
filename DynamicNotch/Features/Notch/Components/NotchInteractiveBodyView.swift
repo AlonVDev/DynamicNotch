@@ -40,9 +40,11 @@ struct NotchInteractiveBodyView: View {
         .animation(notchViewModel.animations.strokeVisibility, value: notchViewModel.shouldRenderStroke)
         .animation(notchViewModel.animations.strokeVisibility, value: settingsViewModel.isShowNotchStrokeEnabled)
         .animation(notchViewModel.animations.notchVisibility, value: notchViewModel.showNotch)
+        .animation(notchViewModel.animations.contentHide, value: isVisiblyHiddenInFullscreen)
     }
     
     private var isVisiblyHiddenInFullscreen: Bool {
+        guard notchViewModel.isDynamicIsland else { return false }
         guard settingsViewModel.application.isDynamicIslandHiddenInFullscreenEnabled else { return false }
         guard let screen = NSScreen.preferredNotchScreen(for: settingsViewModel) ?? NSScreen.main else { return false }
         return SkyLightOperator.shared.isFullscreenSpaceActive(on: screen) && !notchViewModel.hasDisplayedContent

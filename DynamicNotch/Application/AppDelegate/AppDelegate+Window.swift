@@ -126,7 +126,7 @@ extension AppDelegate {
 
         let isFullscreen = SkyLightOperator.shared.isFullscreenSpaceActive(on: screen)
         let shouldHideActivities = settingsViewModel.application.isNotchHiddenInFullscreenEnabled && isFullscreen
-        let shouldHideDynamicIsland = settingsViewModel.application.isDynamicIslandHiddenInFullscreenEnabled && isFullscreen
+        let shouldHideNotchlessIsland = screen.isNotchless && settingsViewModel.application.isDynamicIslandHiddenInFullscreenEnabled && isFullscreen
 
         notchViewModel.setActivityPresentationHidden(shouldHideActivities)
 
@@ -134,7 +134,7 @@ extension AppDelegate {
             clearNowPlayingPrimaryWindowPresentationState()
         }
 
-        if shouldHideDynamicIsland {
+        if shouldHideNotchlessIsland {
             if notchViewModel.hasDisplayedContent {
                 hideWindowWorkItem?.cancel()
                 hideWindowWorkItem = nil
@@ -155,6 +155,7 @@ extension AppDelegate {
         let workItem = DispatchWorkItem { [weak self] in
             guard let self,
                   let screen = NSScreen.preferredNotchScreen(for: self.settingsViewModel),
+                  screen.isNotchless,
                   SkyLightOperator.shared.isFullscreenSpaceActive(on: screen),
                   self.settingsViewModel.application.isDynamicIslandHiddenInFullscreenEnabled,
                   !self.notchViewModel.hasDisplayedContent else {
