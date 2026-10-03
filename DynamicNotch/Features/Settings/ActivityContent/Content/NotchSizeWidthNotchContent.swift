@@ -10,6 +10,7 @@ import SwiftUI
 enum NotchSizeEvent: Equatable {
     case width
     case height
+    case strokeOpacity
 }
 
 struct NotchSizeWidthNotchContent: NotchContentProtocol, DynamicIslandCustomizable {

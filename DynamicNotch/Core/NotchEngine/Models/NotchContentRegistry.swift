@@ -160,6 +160,7 @@ enum NotchContentRegistry {
     enum NotchSize {
         static let width = NotchContentDescriptor(id: "notchSize.width")
         static let height = NotchContentDescriptor(id: "notchSize.height")
+        static let strokeOpacity = NotchContentDescriptor(id: "notchSize.strokeOpacity")
     }
 
     enum Onboarding {
@@ -206,6 +207,7 @@ enum NotchContentRegistry {
         static let hudVolume = id("hud.volume")
         static let notchSizeWidth = id(NotchSize.width.id)
         static let notchSizeHeight = id(NotchSize.height.id)
+        static let notchStrokeOpacity = id(NotchSize.strokeOpacity.id)
         static let lockScreen = id(LockScreen.activity.id)
         static let softwareUpdate = id(Settings.softwareUpdate.id)
 

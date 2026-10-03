@@ -77,12 +77,18 @@ final class ApplicationSettingsStore: SettingsStoreBase, NotchSettingsProviding 
     )
     var notchStrokeWidth: Double
 
-    @StoredDefault(
-        key: GeneralSettingsStorage.Keys.notchStrokeOpacity,
-        defaultValue: ApplicationSettingsStore.maxNotchStrokeOpacity,
-        transform: ApplicationSettingsStore.clampNotchStrokeOpacity
-    )
-    var notchStrokeOpacity: Double
+    @Published var notchStrokeOpacity: Double {
+        didSet {
+            let clamped = Self.clampNotchStrokeOpacity(notchStrokeOpacity)
+            if clamped != notchStrokeOpacity {
+                notchStrokeOpacity = clamped
+                return
+            }
+            guard oldValue != notchStrokeOpacity else { return }
+            persist(notchStrokeOpacity, for: GeneralSettingsStorage.Keys.notchStrokeOpacity)
+            notchSizeEvent.send(.strokeOpacity)
+        }
+    }
 
     @Published var displayLocation: NotchDisplayLocation {
         didSet {
@@ -191,6 +197,7 @@ final class ApplicationSettingsStore: SettingsStoreBase, NotchSettingsProviding 
         self.isLaunchAtLoginEnabled = defaults.bool(forKey: GeneralSettingsStorage.Keys.launchAtLogin)
         self.notchWidth = min(20, max(-20, defaults.integer(forKey: GeneralSettingsStorage.Keys.notchWidth)))
         self.notchHeight = min(4, max(-4, defaults.integer(forKey: GeneralSettingsStorage.Keys.notchHeight)))
+        self.notchStrokeOpacity = Self.resolvedNotchStrokeOpacity(defaults: defaults)
         self.displayLocation = NotchDisplayLocation(
             rawValue: defaults.string(forKey: GeneralSettingsStorage.Keys.displayLocation) ?? NotchDisplayLocation.main.rawValue
         ) ?? .main

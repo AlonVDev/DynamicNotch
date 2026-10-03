@@ -146,7 +146,7 @@ struct NotchSurfaceContainerView: View {
     }
     
     private var shouldShowStroke: Bool {
-        let isStrokeEnabled = settingsViewModel.application.isShowNotchStrokeEnabled
+        let isStrokeEnabled = settingsViewModel.application.isShowNotchStrokeEnabled || notchViewModel.displayedContent?.id == NotchContentRegistry.NotchSize.strokeOpacity.id
         return isStrokeEnabled && notchViewModel.shouldRenderStroke
     }
 }
