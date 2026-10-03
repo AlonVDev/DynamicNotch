@@ -17,7 +17,8 @@ final class ApplicationSettingsStore: SettingsStoreBase, NotchSettingsProviding 
     static let notchPressHoldDurationStep: Double = 0.01
     static let defaultNotchPressHoldDuration: TimeInterval = 0.25
     static let notchStrokeWidthRange: ClosedRange<Double> = 1.0...3.0
-    static let notchStrokeOpacityRange: ClosedRange<Double> = 0.0...1.0
+    static let maxNotchStrokeOpacity: Double = 0.6
+    static let notchStrokeOpacityRange: ClosedRange<Double> = 0.0...maxNotchStrokeOpacity
 
     @Published var isLaunchAtLoginEnabled: Bool {
         didSet {
@@ -78,7 +79,7 @@ final class ApplicationSettingsStore: SettingsStoreBase, NotchSettingsProviding 
 
     @StoredDefault(
         key: GeneralSettingsStorage.Keys.notchStrokeOpacity,
-        defaultValue: 1.0,
+        defaultValue: ApplicationSettingsStore.maxNotchStrokeOpacity,
         transform: ApplicationSettingsStore.clampNotchStrokeOpacity
     )
     var notchStrokeOpacity: Double

@@ -47,8 +47,8 @@ struct NotchSettingsView: View {
                 suffix: "%",
                 accessibilityIdentifier: "settings.general.notchStrokeOpacity",
                 value: Binding(
-                    get: { applicationSettings.notchStrokeOpacity * 100 },
-                    set: { applicationSettings.notchStrokeOpacity = $0 / 100 }
+                    get: { ((applicationSettings.notchStrokeOpacity / ApplicationSettingsStore.maxNotchStrokeOpacity) * 100).rounded() },
+                    set: { applicationSettings.notchStrokeOpacity = ($0 / 100) * ApplicationSettingsStore.maxNotchStrokeOpacity }
                 )
             )
             
