@@ -170,4 +170,12 @@ final class StoredDefaultTests: XCTestCase {
         store.appearanceMode = .dark
         XCTAssertEqual(testDefaults.string(forKey: GeneralSettingsStorage.Keys.appearanceMode), SettingsAppearanceMode.dark.rawValue)
     }
+
+    func testConnectivitySettingsStoreDefaults() {
+        let store = ConnectivitySettingsStore(defaults: testDefaults)
+
+        XCTAssertTrue(store.isFocusLiveActivityEnabled)
+        XCTAssertTrue(store.isFocusOnAutoHideEnabled)
+        XCTAssertEqual(store.focusOnTemporaryActivityDuration, 3)
+    }
 }

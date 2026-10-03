@@ -26,7 +26,7 @@ final class NotchEventCoordinatorIntegrationTests: XCTestCase {
     }
 
     func testFocusOffReplacesFocusLiveActivityWithTemporaryNotification() async {
-        let context = makeContext()
+        let context = makeContext(focusOnAutoHideEnabled: false)
 
         context.coordinator.handleFocusEvent(.FocusOn(.doNotDisturb))
 
@@ -45,7 +45,7 @@ final class NotchEventCoordinatorIntegrationTests: XCTestCase {
     }
 
     func testSleepFocusOnAndOffLiveActivityDismissal() async {
-        let context = makeContext()
+        let context = makeContext(focusOnAutoHideEnabled: false)
 
         context.coordinator.handleFocusEvent(.FocusOn(.sleep))
 
@@ -628,7 +628,7 @@ private extension NotchEventCoordinatorIntegrationTests {
         trayLiveActivityEnabled: Bool = true,
         noInternetTemporaryActivityEnabled: Bool = true,
         homePageLiveActivityEnabled: Bool = false,
-        focusOnAutoHideEnabled: Bool = false
+        focusOnAutoHideEnabled: Bool = true
     ) -> TestContext {
         UserDefaults.standard.set(false, forKey: "isLaunchAtLoginEnabled")
         UserDefaults.standard.set(0, forKey: "notchWidth")
@@ -636,7 +636,7 @@ private extension NotchEventCoordinatorIntegrationTests {
         UserDefaults.standard.set(brightnessHUDEnabled, forKey: "settings.hud.brightness")
         UserDefaults.standard.set(keyboardHUDEnabled, forKey: "settings.hud.keyboard")
         UserDefaults.standard.set(volumeHUDEnabled, forKey: "settings.hud.volume")
-        UserDefaults.standard.set(HudStyle.standard.rawValue, forKey: "settings.hud.style")
+        UserDefaults.standard.set(HudStyle.compact.rawValue, forKey: "settings.hud.style")
         UserDefaults.standard.set(temporaryActivityDurationScale, forKey: "settings.temporary.durationScale")
         UserDefaults.standard.set(true, forKey: "settings.live.hotspot")
         UserDefaults.standard.set(true, forKey: "settings.live.focus")

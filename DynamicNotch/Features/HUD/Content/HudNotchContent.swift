@@ -30,7 +30,7 @@ struct HudNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     init(
         kind: HudPresentationKind,
         level: Int,
-        style: HudStyle = .standard,
+        style: HudStyle = .compact,
         indicatorStyle: HudIndicatorStyle = .bar,
         indicatorTintStyle: HudIndicatorTintStyle = .levelColor,
         showsIndicatorGlow: Bool = true,

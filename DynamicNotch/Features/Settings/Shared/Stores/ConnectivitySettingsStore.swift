@@ -14,7 +14,7 @@ final class ConnectivitySettingsStore: SettingsStoreBase {
     @StoredDefault(key: GeneralSettingsStorage.Keys.focusLiveActivityEnabled, defaultValue: true)
     var isFocusLiveActivityEnabled: Bool
 
-    @StoredDefault(key: GeneralSettingsStorage.Keys.focusOnAutoHideEnabled, defaultValue: false)
+    @StoredDefault(key: GeneralSettingsStorage.Keys.focusOnAutoHideEnabled, defaultValue: true)
     var isFocusOnAutoHideEnabled: Bool
 
     @StoredDefault(

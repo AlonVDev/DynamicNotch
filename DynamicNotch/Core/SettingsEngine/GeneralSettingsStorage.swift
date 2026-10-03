@@ -174,7 +174,7 @@ enum GeneralSettingsStorage {
         Keys.hudColoredStrokeEnabled: false,
         Keys.hotspotLiveActivityEnabled: true,
         Keys.focusLiveActivityEnabled: true,
-        Keys.focusOnAutoHideEnabled: false,
+        Keys.focusOnAutoHideEnabled: true,
         Keys.focusOnTemporaryActivityDuration: 3,
         Keys.focusAppearanceStyle: FocusAppearanceStyle.iconsOnly.rawValue,
         Keys.nowPlayingLiveActivityEnabled: true,
