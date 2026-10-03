@@ -6,22 +6,43 @@ private enum RestorableDismissedContent {
     case temporary(NotchContentProtocol, duration: TimeInterval)
 }
 
+/// Central presentation engine coordinating Live Activities and Dynamic Island presentations.
+///
+/// **Apple LiveActivity & Dynamic Island Lifecycle Management:**
+/// - Maintains the active presentation state model (`NotchModel` / `LiveActivityModel`).
+/// - Coordinates priority-based scheduling for concurrent Live Activities (`NotchContentProtocol` / `LiveActivityContentProtocol`).
+/// - Handles transient alert / HUD preemption and restoration of background Live Activities.
+/// - Manages interactive transitions between Compact and Expanded presentation modes.
 @MainActor
 final class NotchEngine: ObservableObject {
+    /// Active visual state model representing the Notch / Dynamic Island presentation.
     @Published private(set) var notchModel = NotchModel()
+
+    /// Visibility flag controlling whether the notch surface is visible.
     @Published private(set) var showNotch = false
+
+    /// Cached border stroke color for smooth fade-out animations when content hides.
     @Published private(set) var cachedStrokeColor: Color = .clear
 
     private let animationsProvider: () -> NotchAnimations
     private let configuredHideDelay: TimeInterval?
     private let configuredQueueDelay: TimeInterval?
 
+    /// Priority-ordered stack of currently active Live Activities (Apple: active `Activity<Attributes>` instances).
     private var activeLiveActivities: [NotchContentProtocol] = []
+
+    /// Unique IDs of Live Activities dismissed by the user (swiped away / dismissed from the Dynamic Island).
     private var dismissedLiveActivityIDs: [String] = []
+
     private var temporaryTask: Task<Void, Never>?
     private var temporaryTimerID = UUID()
+
+    /// Live Activity temporarily preempted/suspended while a transient alert is active.
     private var suspendedActivity: NotchContentProtocol?
+
+    /// Last dismissed activity or alert saved for user restoration.
     private var lastDismissedContent: RestorableDismissedContent?
+
     private var currentTemporaryNotificationDuration: TimeInterval?
     private var eventQueue: [NotchState] = []
     private var isProcessingQueue = false
@@ -53,22 +74,41 @@ final class NotchEngine: ObservableObject {
         max(0, hideDelay + 0.01)
     }
 
+    /// Checks whether the active Live Activity can expand from compact into expanded presentation mode.
     var canExpandActiveLiveActivity: Bool {
         guard let content = notchModel.content else { return false }
 
-        return !notchModel.isLiveActivityExpanded &&
+        return !notchModel.isExpanded &&
         content.isExpandable &&
         content.expandsOnTap
     }
 
+    /// Apple LiveActivity equivalent: Whether current presentation can expand.
+    var canExpand: Bool {
+        canExpandActiveLiveActivity
+    }
+
+    /// Checks whether there is a previously dismissed Live Activity or notification that can be restored.
     var canRestoreDismissedContent: Bool {
         lastDismissedContent != nil || !dismissedLiveActivityIDs.isEmpty
     }
 
-    var canOpenActiveWindowLink: Bool {
-        notchModel.content?.windowLink != nil
+    /// Apple LiveActivity equivalent: Whether dismissed content can be restored.
+    var canRestore: Bool {
+        canRestoreDismissedContent
     }
 
+    /// Checks whether the currently presented content provides a deep link / app window action.
+    var canOpenActiveWindowLink: Bool {
+        notchModel.content?.windowLink != nil || notchModel.content?.widgetURL != nil
+    }
+
+    /// Apple LiveActivity equivalent: Whether active content provides a widgetURL / deep-link.
+    var canOpenWidgetURL: Bool {
+        canOpenActiveWindowLink
+    }
+
+    /// Updates the hardware geometry metrics (Notch bezel vs Dynamic Island floating pill).
     func updateBaseGeometry(width: CGFloat, height: CGFloat, scale: CGFloat, isDynamicIsland: Bool) {
         guard notchModel.baseWidth != width ||
               notchModel.baseHeight != height ||
@@ -83,6 +123,9 @@ final class NotchEngine: ObservableObject {
         notchModel.updateToken = UUID()
     }
 
+    /// Dispatches a state transition event driving the Live Activity / Alert lifecycle.
+    ///
+    /// Corresponds to Apple's `ActivityKit` lifecycle management (`Activity.request`, `update`, `end`, and Dynamic Island dismissal).
     func send(_ notchState: NotchState) {
         switch notchState {
         case .showTemporaryNotification(let content, let duration):
@@ -160,6 +203,7 @@ final class NotchEngine: ObservableObject {
         processQueue()
     }
 
+    /// Hides the active transient alert/notification and restores the highest-priority suspended Live Activity.
     func hideTemporaryNotification() {
         guard notchModel.temporaryNotificationContent != nil,
               !notchModel.isLiveActivityExpanded else { return }
@@ -183,6 +227,8 @@ final class NotchEngine: ObservableObject {
         )
     }
 
+    /// Dismisses the currently presented activity or notification (swiped away / user dismissed).
+    /// If restorable, saves the content to the dismissed stack for subsequent restoration.
     func dismissActiveContent() {
         if let temporaryContent = notchModel.temporaryNotificationContent {
             if temporaryContent.isRestorable {
@@ -205,6 +251,7 @@ final class NotchEngine: ObservableObject {
         }
     }
 
+    /// Restores the most recently dismissed Live Activity or notification to the Dynamic Island presentation.
     func restoreDismissedContent() {
         if let lastDismissedContent {
             self.lastDismissedContent = nil
@@ -222,6 +269,8 @@ final class NotchEngine: ObservableObject {
         restoreDismissedLiveActivity()
     }
 
+    /// Re-evaluates priorities among registered active Live Activities and presents the highest-priority one.
+    /// Maps to Apple's multi-activity scheduling in the Dynamic Island.
     func refreshLiveActivityPriorities() {
         sortActiveLiveActivitiesByPriority()
 
@@ -242,10 +291,21 @@ final class NotchEngine: ObservableObject {
         processQueue()
     }
 
+    /// Triggers the deep-link / window action of the active content to open the host application.
     func openActiveWindowLink() {
-        notchModel.content?.windowLink?()
+        if let widgetURL = notchModel.content?.widgetURL {
+            widgetURL()
+        } else {
+            notchModel.content?.windowLink?()
+        }
     }
 
+    /// Apple LiveActivity equivalent: Open the host app URL / deep link.
+    func openWidgetURL() {
+        openActiveWindowLink()
+    }
+
+    /// Handles user tap to expand the Dynamic Island from Compact mode to Expanded presentation mode.
     func handleActiveContentTap() {
         guard canExpandActiveLiveActivity else { return }
 
@@ -254,10 +314,36 @@ final class NotchEngine: ObservableObject {
         }
 
         withAnimation(animations.expandLiveActivity) {
-            notchModel.isLiveActivityExpanded = true
+            notchModel.isExpanded = true
         }
     }
 
+    /// Apple LiveActivity equivalent: Expands the Dynamic Island into expanded mode.
+    func expand() {
+        handleActiveContentTap()
+    }
+
+    /// Apple LiveActivity equivalent: Collapses the Dynamic Island back to compact mode.
+    func collapse() {
+        handleOutsideClick()
+    }
+
+    /// Apple LiveActivity equivalent: Dismisses the currently presented activity or alert.
+    func dismiss() {
+        dismissActiveContent()
+    }
+
+    /// Apple LiveActivity equivalent: Restores the most recently dismissed activity or alert.
+    func restore() {
+        restoreDismissedContent()
+    }
+
+    /// Apple LiveActivity equivalent: Hides the active alert and restores any suspended Live Activity.
+    func dismissAlert() {
+        hideTemporaryNotification()
+    }
+
+    /// Handles user clicks outside the expanded island to collapse it back to Compact presentation mode.
     func handleOutsideClick() {
         if UserDefaults.standard.bool(forKey: "isNotchLocked") {
             return

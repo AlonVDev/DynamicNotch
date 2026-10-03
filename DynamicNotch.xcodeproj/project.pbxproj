@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0B9409DA3023B7F20092A512 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B9409D93023B7DA0092A512 /* libsqlite3.tbd */; };
 		E2761738300A66E900E79207 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = E2761737300A66E900E79207 /* Sparkle */; };
 		E2A100022F90000000000001 /* DynamicNotch/Resources/MediaRemoteAdapter/MediaRemoteAdapter.framework in Embed MediaRemote Adapter */ = {isa = PBXBuildFile; fileRef = E2A100012F90000000000001 /* DynamicNotch/Resources/MediaRemoteAdapter/MediaRemoteAdapter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E2C135B72F59FA8100348421 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = E2C135B62F59FA8100348421 /* Lottie */; };
@@ -117,7 +116,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0B9409DA3023B7F20092A512 /* libsqlite3.tbd in Frameworks */,
 				E2761738300A66E900E79207 /* Sparkle in Frameworks */,
 				E2C135B72F59FA8100348421 /* Lottie in Frameworks */,
 			);
@@ -565,16 +563,18 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 25;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "DynamicNotch/Resources/Preview\\ Content";
 				DEVELOPMENT_TEAM = WZHZ6LB2F6;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
-				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
-				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = YES;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = YES;
+				ENABLE_RESOURCE_ACCESS_CAMERA = YES;
 				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
 				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
 				ENABLE_RESOURCE_ACCESS_PHOTO_LIBRARY = YES;
@@ -587,14 +587,17 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "We need access to media data for display in Notch.";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "The app requires Bluetooth access to check the status of devices.";
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "DynamicNotch needs access to your calendar to display upcoming events in the notch.";
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "DynamicNotch needs access to your calendar to display upcoming events in the notch.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "DynamicNotch needs access to your camera to display a camera preview in the notch.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "The app requires local network access to determine the name of your current Wi-Fi network.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				MARKETING_VERSION = 1.6.2;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MARKETING_VERSION = 1.6.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Jackson.DynamicNotch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -605,6 +608,8 @@
 				RUNTIME_EXCEPTION_DISABLE_EXECUTABLE_PAGE_PROTECTION = NO;
 				RUNTIME_EXCEPTION_DISABLE_LIBRARY_VALIDATION = NO;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -623,16 +628,18 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 25;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "DynamicNotch/Resources/Preview\\ Content";
 				DEVELOPMENT_TEAM = WZHZ6LB2F6;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
-				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
-				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = YES;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = YES;
+				ENABLE_RESOURCE_ACCESS_CAMERA = YES;
 				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
 				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
 				ENABLE_RESOURCE_ACCESS_PHOTO_LIBRARY = YES;
@@ -645,14 +652,17 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "We need access to media data for display in Notch.";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "The app requires Bluetooth access to check the status of devices.";
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "DynamicNotch needs access to your calendar to display upcoming events in the notch.";
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "DynamicNotch needs access to your calendar to display upcoming events in the notch.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "DynamicNotch needs access to your camera to display a camera preview in the notch.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "The app requires local network access to determine the name of your current Wi-Fi network.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				MARKETING_VERSION = 1.6.2;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MARKETING_VERSION = 1.6.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Jackson.DynamicNotch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -663,6 +673,8 @@
 				RUNTIME_EXCEPTION_DISABLE_EXECUTABLE_PAGE_PROTECTION = NO;
 				RUNTIME_EXCEPTION_DISABLE_LIBRARY_VALIDATION = NO;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;

@@ -33,6 +33,14 @@ final class NotchSystemEventsHandler {
                     duration: duration
                 )
             )
+
+        case .strokeOpacity:
+            notchViewModel.send(
+                .showTemporaryNotification(
+                    NotchStrokeOpacityNotchContent(settingsViewModel: settingsViewModel),
+                    duration: duration
+                )
+            )
         }
     }
 }

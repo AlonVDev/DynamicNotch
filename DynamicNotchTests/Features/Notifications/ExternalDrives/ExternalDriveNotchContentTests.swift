@@ -120,4 +120,23 @@ final class ExternalDriveNotchContentTests: XCTestCase {
 
         XCTAssertNil(driveZeroBytes.formattedCapacity)
     }
+
+    func testInternalAndVirtualVolumesAreNotExternalPortDevices() {
+        let monitor = ExternalDrivesMonitor()
+
+        // Root internal volume must not be recognized as an external port device
+        XCTAssertFalse(monitor.isExternalPortConnectedDevice(url: URL(fileURLWithPath: "/")))
+
+        // System directories must not be recognized as external port devices
+        XCTAssertFalse(monitor.isExternalPortConnectedDevice(url: URL(fileURLWithPath: "/System")))
+        XCTAssertFalse(monitor.isExternalPortConnectedDevice(url: URL(fileURLWithPath: "/private")))
+
+        // Non-file URLs
+        if let webURL = URL(string: "https://apple.com") {
+            XCTAssertFalse(monitor.isExternalPortConnectedDevice(url: webURL))
+        }
+
+        // Non-existent volume paths
+        XCTAssertFalse(monitor.isExternalPortConnectedDevice(url: URL(fileURLWithPath: "/Volumes/NonExistentDisk12345")))
+    }
 }

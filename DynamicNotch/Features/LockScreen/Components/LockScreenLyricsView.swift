@@ -268,7 +268,6 @@ private struct LockScreenLyricLineView: View {
             .blur(radius: blurRadius)
             .multilineTextAlignment(.leading)
             .fixedSize(horizontal: false, vertical: true)
-            .shadow(color: isActive ? .white.opacity(0.18) : .clear, radius: 10, x: 0, y: 0)
             .padding(.horizontal, 14)
             .padding(.vertical, 8)
             .frame(maxWidth: .infinity, alignment: .leading)

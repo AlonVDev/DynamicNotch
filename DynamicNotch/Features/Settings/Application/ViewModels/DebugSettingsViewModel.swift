@@ -589,6 +589,11 @@ final class DebugSettingsViewModel: ObservableObject {
                     id: NotchContentRegistry.DebugSequence.notchSizeHeight,
                     duration: 3
                 )
+                try await self.playTemporaryPreview(
+                    NotchStrokeOpacityNotchContent(settingsViewModel: settingsViewModel),
+                    id: NotchContentRegistry.DebugSequence.notchStrokeOpacity,
+                    duration: 3
+                )
                 try await self.playLockScreenPreview()
                 try await self.playSoftwareUpdatePreview()
             } catch is CancellationError {

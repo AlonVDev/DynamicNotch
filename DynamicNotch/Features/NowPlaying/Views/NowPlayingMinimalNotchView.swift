@@ -36,8 +36,8 @@ struct NowPlayingMinimalNotchView: View {
         HStack {
             ArtworkView(
                 nowPlayingViewModel: nowPlayingViewModel,
-                width: isNotchlessScreen ? 18 : 24,
-                height: isNotchlessScreen ? 18 : 24,
+                width: isNotchlessScreen ? 18 : 22,
+                height: isNotchlessScreen ? 18 : 22,
                 cornerRadius: isNotchlessScreen ? 3 : 5,
                 usesFlipAnimation: settings.isNowPlayingArtwork3DEffectEnabled
             )
