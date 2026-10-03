@@ -126,7 +126,6 @@ extension AppDelegate {
 
         let isFullscreen = SkyLightOperator.shared.isFullscreenSpaceActive(on: screen)
         let shouldHideActivities = settingsViewModel.application.isNotchHiddenInFullscreenEnabled && isFullscreen
-        let shouldHideDynamicIsland = settingsViewModel.application.isDynamicIslandHiddenInFullscreenEnabled && isFullscreen
 
         notchViewModel.setActivityPresentationHidden(shouldHideActivities)
 
@@ -134,37 +133,7 @@ extension AppDelegate {
             clearNowPlayingPrimaryWindowPresentationState()
         }
 
-        if shouldHideDynamicIsland {
-            if notchViewModel.hasDisplayedContent {
-                hideWindowWorkItem?.cancel()
-                hideWindowWorkItem = nil
-                window.orderFrontRegardless()
-            } else {
-                scheduleDynamicIslandOrderOut()
-            }
-        } else {
-            hideWindowWorkItem?.cancel()
-            hideWindowWorkItem = nil
-            window.orderFrontRegardless()
-        }
-    }
-
-    private func scheduleDynamicIslandOrderOut() {
-        guard hideWindowWorkItem == nil else { return }
-
-        let workItem = DispatchWorkItem { [weak self] in
-            guard let self,
-                  let screen = NSScreen.preferredNotchScreen(for: self.settingsViewModel),
-                  SkyLightOperator.shared.isFullscreenSpaceActive(on: screen),
-                  self.settingsViewModel.application.isDynamicIslandHiddenInFullscreenEnabled,
-                  !self.notchViewModel.hasDisplayedContent else {
-                return
-            }
-            self.window?.orderOut(nil)
-            self.hideWindowWorkItem = nil
-        }
-        hideWindowWorkItem = workItem
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35, execute: workItem)
+        window.orderFrontRegardless()
     }
 
     private func clearNowPlayingPrimaryWindowPresentationState() {

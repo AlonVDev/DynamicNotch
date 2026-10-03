@@ -106,16 +106,13 @@ extension AppDelegate {
     }
 
     func observeFullscreenVisibilityChanges() {
-        Publishers.CombineLatest3(
-            settingsViewModel.application.$isNotchHiddenInFullscreenEnabled.removeDuplicates(),
-            settingsViewModel.application.$isDynamicIslandHiddenInFullscreenEnabled.removeDuplicates(),
-            notchViewModel.$hasDisplayedContent.removeDuplicates()
-        )
-        .receive(on: RunLoop.main)
-        .sink { [weak self] _ in
-            self?.updateWindowFrame()
-        }
-        .store(in: &cancellables)
+        settingsViewModel.application.$isNotchHiddenInFullscreenEnabled
+            .removeDuplicates()
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.updateWindowFrame()
+            }
+            .store(in: &cancellables)
     }
 
     func observeHUDConfigurationChanges() {

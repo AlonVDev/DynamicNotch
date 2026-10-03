@@ -147,7 +147,7 @@ enum GeneralSettingsStorage {
         Keys.preferredDisplayName: "",
         Keys.displayAutoSwitchEnabled: true,
         Keys.appLanguage: DynamicNotchLanguage.system.rawValue,
-        Keys.hideNotchInFullscreenEnabled: false,
+        Keys.hideNotchInFullscreenEnabled: true,
         Keys.hideDynamicIslandInFullscreenEnabled: false,
         Keys.notchTapToExpandEnabled: true,
         Keys.notchExpandInteraction: NotchExpandInteraction.pressAndHold.rawValue,

@@ -37,7 +37,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     var window: OverlayPanelWindow!
     var localClickMonitor: Any?
     let globalClickMonitor = GlobalClickMonitor()
-    var hideWindowWorkItem: DispatchWorkItem?
     var cancellables = Set<AnyCancellable>()
     var isPrimaryWindowSuspendedForLock = false
     var expansionTime: Date = .distantPast
@@ -119,8 +118,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             container.lockScreenLiveActivityWindowManager.invalidate()
         }
         stopOutsideClickMonitoring()
-        hideWindowWorkItem?.cancel()
-        hideWindowWorkItem = nil
         container.externalDrivesMonitor.stopMonitoring()
     }
 
